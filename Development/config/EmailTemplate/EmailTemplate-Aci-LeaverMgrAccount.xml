@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate bcc="mbox-idm-prd@aciworldwide.com" name="ACI - Leaver Mgr Account" to="mbox-am-orientation@aciworldwide.com">
+  <Body>
+&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+table, th, td {
+    border: 1px solid black;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1 style="text-align:center"&gt;&lt;img src="%%BASE_URL%%/images/aci/CorpITHeader.png"&gt;&lt;/h1&gt;
+&lt;p style="text-align:center"&gt;Employee Information &lt;/p&gt;
+&lt;table align="center"&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Name:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$firstname $lastname &lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Title:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$employeeTitle &lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Type:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$personType &lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Email Address:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$email&lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Employee Manager:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$manager&lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Department:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$department&lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Location / Country:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$location / $country&lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;End Date:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$termDate&lt;/td&gt;		
+  &lt;/tr&gt;
+&lt;/table&gt;
+&lt;p style="text-align:center"&gt;Accounts Disabled &lt;/p&gt;
+&lt;table align="center"&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;b&gt;Application&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Account&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Additional Information&lt;/b&gt;&lt;/td&gt;
+&lt;/tr&gt;
+#foreach ($attr in $list)
+&lt;tr&gt;
+&lt;td&gt;$attr.name&lt;/td&gt;&lt;td&gt;$attr.account&lt;/td&gt;&lt;td&gt;$attr.info&lt;/td&gt;
+&lt;/tr&gt;
+#end
+&lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+ </Body>
+  <Description>
+	Email Template for Terminations 
+  </Description>
+  <Subject>Terminate request - Duffney, Josh</Subject>
+</EmailTemplate>

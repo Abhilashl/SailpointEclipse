@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Custom PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Custom name="accountTypeMap">
+  <Attributes>
+    <Map>
+      <entry key="Active Directory">
+        <value>
+          <Map>
+            <entry key="Groups">
+              <value>
+                <Attributes>
+                  <Map>
+                    <entry key="Administrators" value="Elevated"/>
+                    <entry key="Domain Admins" value="Elevated"/>
+                    <entry key="Enterprise Admins" value="Elevated"/>
+                  </Map>
+                </Attributes>
+              </value>
+            </entry>
+            <entry key="Users">
+              <value>
+                <Attributes>
+                  <Map>
+                    <entry key="DevABATM">
+                      <value>
+                        <Attributes>
+                          <Map>
+                            <entry key="Account Type" value="AcctSteve"/>
+                            <entry key="Elevated" value="EleSteve"/>
+                          </Map>
+                        </Attributes>
+                      </value>
+                    </entry>
+                  </Map>
+                </Attributes>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="UNIX">
+        <value>
+          <Map>
+            <entry key="Users">
+              <value>
+                <Attributes>
+                  <Map>
+                    <entry key="root" value="Elevated"/>
+                  </Map>
+                </Attributes>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+    </Map>
+  </Attributes>
+</Custom>

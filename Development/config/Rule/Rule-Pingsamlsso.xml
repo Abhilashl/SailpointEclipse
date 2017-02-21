@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="PingSAMLSSO" type="SAMLCorrelation">
+  <Description>A rule used to map SAML name Id and attributes to an Identity.</Description>
+  <Signature returnType="SailPointObject">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="assertionAttributes">
+        <Description>
+          A map where the key is a string and value is a string. The map will always contain
+          a key NameId with the value being the name Id sent by the Identity Provider.  All other
+          SAML assertion attributes will be included in the map.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="identity Or Link">
+        <Description>
+          The Identity or Link that has been authenticated via SAML SSO.
+          Returning the Link is the preferred way as it provides the
+          exact account back to the server side which can be helpful
+          when collecting authentication for electronic signatures.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[import org.apache.log4j.Logger;
+import sailpoint.object.Identity;
+import java.util.*;
+
+Logger  logger = Logger.getLogger("com.aci.rule.sso");
+logger.debug("SSO request received");        
+Set keys = assertionAttributes.keySet();
+Iterator i = keys.iterator();
+   while ( i.hasNext() )  {
+       String key = (String) i.next();
+       String value = (String) assertionAttributes.get(key);
+       logger.debug(key + " = " + value);
+   }
+// Get the nameId from the assertionAttributes
+
+String nameId = (String)assertionAttributes.get("nameId");
+logger.debug("Name ID: "+nameId);
+Identity ident;
+
+if(nameId != null) {
+
+	// Lookup the identity based on nameId
+	ident = context.getObject(Identity.class, nameId);
+} else {
+	nameId = (String)assertionAttributes.get("uid");
+	ident = context.getObject(Identity.class, nameId);
+}
+
+return ident;]]></Source>
+</Rule>

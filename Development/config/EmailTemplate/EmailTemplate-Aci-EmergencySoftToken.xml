@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="ACI - Emergency Soft Token">
+  <Body>
+&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+table, th, td {
+    border: 1px solid black;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1 style="text-align:center"&gt;&lt;img src="https://identitydev.am.tsacorp.com/identityiq/images/ACI/01.png"&gt;&lt;/h1&gt;
+&lt;h2 style="text-align:center"&gt;&lt;b&gt;Workstation Token Activation Using Emergency Passcode&lt;/b&gt;&lt;/h2&gt;
+&lt;p style="text-align:center"&gt;You have been assigned an Emergency passcode for the activation and use of your RSA workstation token. Your activation URL and Code has been emailed to you, but until you can access your ACI email account you will use this Emergency Passcode to create a personal PIN. This Emergency Passcode will work from any location when logging in to the ACI SSL VPN or into the Peer2Peer page to access your MS Outlook (Exchange) E-mail account.&lt;/p&gt;
+&lt;ul style="list-style-type:disc"&gt;
+  &lt;li style="text-align:center"&gt;Navigate to &lt;a href="http://mytoken.aciworldwide.com/"&gt;mytoken.aciworldwide.com&lt;/a&gt; in a web browser&lt;img src="https://identitydev.am.tsacorp.com/identityiq/images/ACI/02.png"&gt;&lt;/li&gt;
+  &lt;li style="text-align:center"&gt;Enter your Network ID in the User ID Field and press the OK Button.&lt;img src="https://identitydev.am.tsacorp.com/identityiq/images/ACI/03.png"&gt;&lt;/li&gt;
+  &lt;li style="text-align:center"&gt;In the Passcode: field enter this Emergency Passcode: _________ and press the Log On button&lt;img src="https://identitydev.am.tsacorp.com/identityiq/images/ACI/04.png"&gt;&lt;/li&gt;
+  &lt;li style="text-align:center"&gt;Create a New Pin. &lt;font color="red"&gt;The PIN MUST be 8 numbers in length and cannot start with the number "0" ZERO.&lt;/font&gt;&lt;/li&gt;
+  &lt;li style="text-align:center"&gt;Confirm your New PIN by entering it in the Confirm New PIN field.&lt;/li&gt;
+  &lt;li style="text-align:center"&gt;In The Next Tokencode field enter your Emergency Passcode again and press the OK button.&lt;img src="https://identitydev.am.tsacorp.com/identityiq/images/ACI/05.png"&gt;&lt;/li&gt;
+  &lt;li style="text-align:center"&gt;You have now successfully created your personal PIN.&lt;/li&gt;
+  &lt;li style="text-align:center"&gt;You can now Answer your Security Questions by clicking the Set Up link.&lt;img src="https://identitydev.am.tsacorp.com/identityiq/images/ACI/06.png"&gt;&lt;/li&gt;
+  &lt;li style="text-align:center"&gt;You can now access your email account where you will find the instructions for importing your token.&lt;/li&gt;
+  &lt;li style="text-align:center"&gt;Navigate to &lt;a href="http://home.aciworldwide.com/"&gt;home.aciworldwide.com&lt;/a&gt; in Google Chrome&lt;img src="https://identitydev.am.tsacorp.com/identityiq/images/ACI/07.png"&gt;&lt;/li&gt;
+  &lt;li style="text-align:center"&gt;Click on the Sign In to ACI Worldwide link in the upper left of the screen&lt;img src="https://identitydev.am.tsacorp.com/identityiq/images/ACI/08.png"&gt;&lt;/li&gt;
+  &lt;li style="text-align:center"&gt;Here you will enter your user id (Active Directory ID) and the PIN your created plus the emergency passcode from above. &lt;font color="red"&gt;For example&lt;/font&gt;; if I create the PIN "12345678" and the emergency Passcode that is assigned to me is "87654321" I will enter all 16 characters in the passcode field like this: "1234567887654321" and then press Sign In.&lt;img src="https://identitydev.am.tsacorp.com/identityiq/images/ACI/09.png"&gt;&lt;/li&gt;
+&lt;/ul&gt; 
+&lt;p style="text-align:center"&gt;This will log you in to the Peer2Peer page where you can access your email box. There you will find the email and instructions to import your token to your workstation. Please follow the steps in that email to import and use your token.&lt;/p&gt;
+&lt;p style="text-align:center"&gt;Please contact the Global Service Desk at &lt;a href="tel:+1 (855) 224-3375"&gt;+1 (855) ACI-DESK&lt;/a&gt; in the US &amp; Canada or &lt;a href="tel:+1 (404) 923-6600"&gt;+1 (404) 923-6600&lt;/a&gt; for international locations if you have any questions or concerns.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+ </Body>
+  <Description>
+	Email Template for Network Password. 
+  </Description>
+  <Subject>
+	A New Report's Accounts Are Ready
+  </Subject>
+</EmailTemplate>

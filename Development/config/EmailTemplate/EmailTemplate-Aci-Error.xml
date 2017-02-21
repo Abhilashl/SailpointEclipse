@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="ACI - Error">
+  <Body>
+&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+table, th, td {
+    border: 1px solid black;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1 style="text-align:center"&gt;&lt;img src="https://identitydev.am.tsacorp.com/identityiq/images/ACI/01.png"&gt;&lt;/h1&gt;
+&lt;p style="text-align:center"&gt;Error occurred.&lt;/p&gt;
+#foreach ($attr in $list)
+$attr
+#end
+&lt;/body&gt;
+&lt;/html&gt;
+ </Body>
+  <Description>
+	Email Template for Errors 
+  </Description>
+  <Subject>
+	Error occurred.
+  </Subject>
+</EmailTemplate>

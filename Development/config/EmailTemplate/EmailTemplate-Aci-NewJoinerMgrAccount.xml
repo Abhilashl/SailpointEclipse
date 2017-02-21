@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="ACI - New Joiner Mgr Account">
+  <Body>
+&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+table, th, td {
+    border: 1px solid black;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1 style="text-align:center"&gt;&lt;img src=""%%BASE_URL%%/images/aci/CorpITHeader.png"&gt;&lt;/h1&gt;
+&lt;h2 style="text-align:center"&gt;&lt;b&gt;ACI Onboarding Notification 1 of 2&lt;/b&gt;&lt;/h2&gt;
+&lt;p style="text-align:center"&gt;&lt;b&gt;Employee Information&lt;/b&gt;&lt;/p&gt;
+&lt;table align="center"&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Name:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$firstname $lastname &lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Title:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$employeeTitle &lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Type:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$personType &lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Email Address:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$email&lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Employee Manager:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$manager&lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Department:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$department&lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Location / Country:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$location / $country&lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Start Date:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$startDate&lt;/td&gt;		
+  &lt;/tr&gt;
+&lt;/table&gt;
+&lt;p style="text-align:center"&gt;&lt;b&gt;Accounts Provisioned &lt;/b&gt;&lt;/p&gt;
+&lt;table align="center"&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Application&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;b&gt;Account&lt;/b&gt;&lt;/td&gt;
+	&lt;td&gt;&lt;b&gt;Additional Information&lt;/b&gt;&lt;/td&gt;	
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Active Directory&lt;/td&gt;
+    &lt;td&gt;$employeeOU\\$networkId &lt;/td&gt;
+	&lt;td&gt;Network ID &lt;/td&gt;	
+  &lt;/tr&gt;
+#if ($!sfusername )
+&lt;tr&gt;
+    &lt;td&gt;Salesforce&lt;/td&gt;
+    &lt;td&gt;$sfusername &lt;/td&gt;
+	&lt;td&gt;Single Sign On (SSO) &lt;/td&gt;	
+  &lt;/tr&gt;
+#end
+#if ($!clusername )
+  &lt;tr&gt;
+    &lt;td&gt;Clarity&lt;/td&gt;
+    &lt;td&gt;$!clusername &lt;/td&gt;
+	&lt;td&gt;Single Sign On (SSO) &lt;/td&gt;	
+  &lt;/tr&gt;
+#end
+#if ($!webexUser )
+  &lt;tr&gt;
+    &lt;td&gt;Webex&lt;/td&gt;
+    &lt;td&gt;$!webexUser &lt;/td&gt;
+	&lt;td&gt;Single Sign On (SSO) &lt;/td&gt;	
+  &lt;/tr&gt;
+#end    
+&lt;/table&gt;
+&lt;p style="text-align:center"&gt;To request additional accounts or privileges, visit ACI's Peer 2 Peer page and select Global Service Desk.&lt;/p&gt;
+&lt;p style="text-align:center"&gt;Please contact the Global Service Desk at &lt;a href="tel:+1 (855) 224-3375"&gt;+1 (855) ACI-DESK&lt;/a&gt; in the US &amp; Canada or &lt;a href="tel:+1 (404) 923-6600"&gt;+1 (404) 923-6600&lt;/a&gt; for international locations if you have any questions or concerns.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+ </Body>
+  <Description>
+	Email Template for Network ID. 
+  </Description>
+  <Signature>
+    <Inputs>
+      <Argument name="firstname" type="string">
+        <Description>Identity</Description>
+      </Argument>
+      <Argument name="lastname" type="string">
+        <Description>Identity</Description>
+      </Argument>
+      <Argument name="networkId" type="string">
+        <Description>Network Id </Description>
+      </Argument>
+      <Argument name="email" type="string">
+        <Description>Employee email </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Subject>
+	New Hire - $firstname $lastname
+  </Subject>
+</EmailTemplate>

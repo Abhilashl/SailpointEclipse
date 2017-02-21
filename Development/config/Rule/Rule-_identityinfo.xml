@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="_IdentityInfo">
+  <Description>This rule can be executed in the console or in debug mode to return information </Description>
+  <Signature returnType="String">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="environment" type="Map">
+        <Description>
+           Arguments passed to the aggregation or refresh task.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+           The Identity object that represents the user
+           that is being aggregated.
+        </Description>
+      </Argument>
+      <Argument name="attributeDefinition">
+        <Description>
+           The AttributeDefinition object for this attribute.
+        </Description>
+      </Argument>
+      <Argument name="link">
+        <Description>
+           The Link object from the Identity, if this is an application
+           mapping rule.  For global mapping rules this will be void.
+        </Description>
+      </Argument>
+      <Argument name="attributeSource">
+        <Description>
+          The AttributeSource object.
+        </Description>
+      </Argument>
+      <Argument name="oldValue">
+        <Description>
+          The original value of the application account attribute.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="attributeValue">
+        <Description>
+          The value of the attribute that should be populated.
+          The rule should return this value.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[
+/*
+        Rule:  _IdentityInfo
+        Author:  Steve Nuffer
+	
+	
+	Version: .2000
+
+*/
+import org.apache.log4j.Logger; 
+import sailpoint.object.*;
+import sailpoint.tools.Util;
+
+//String identityName = "steve.nuffer@aciworldwide.com";
+//String identityName = "800001";
+String identityName = "test.rule";
+
+System.out.println("****************  " + identityName + "  ****************\n");
+
+Identity identity = context.getObjectByName(Identity.class, identityName);
+
+try { Objects.requireNonNull(identity , "identity object must not be null");
+
+    // Get Identity attributes
+    String getDisplayName  = identity.getDisplayName();
+    String getDisplayableName = identity.getDisplayableName();    
+    String idendityPersonID = identity.getStringAttribute("personId");
+    String identityFname = identity.getFirstname();
+    String identityLname = identity.getLastname();
+    String identityKnownAs = identity.getStringAttribute("KNOWN_AS");    
+
+    //Print Out Values
+    System.out.println("getDisplayName = " + getDisplayName);
+    System.out.println("getDisplayableName = " + getDisplayableName);
+    System.out.println("idendityPersonID = " + idendityPersonID);
+    System.out.println("identityFname = " + identityFname);   
+    System.out.println("identityLname = " + identityLname);   
+    System.out.println("identityKnownAs = " + identityKnownAs);   
+    System.out.println();    
+} catch(Exception e)
+     {   System.out.println("Can't find Identity Object for=" +identityName);    }
+
+ ]]></Source>
+</Rule>

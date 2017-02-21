@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_ADGroupExclusion" type="CertificationExclusion">
+  <Description>This rule is an example Certification Exclusion rule that removes all of the certifiable items from a certification if the identity being certified is marked as inactive.</Description>
+  <Signature returnType="String">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="entity" type="AbstractCertifiableEntity">
+        <Description>
+          The AbstractCertifiableEntity that is part of the certification.
+          Currently, this is either an Identity, ManagedAttribute, or Bundle.
+        </Description>
+      </Argument>
+      <Argument name="certification" type="Certification">
+        <Description>
+          The certification that this identity is part of.
+        </Description>
+      </Argument>
+      <Argument name="certContext" type="CertificationContext">
+        <Description>
+          The CertificationContext that is being used to generate the
+          certification.
+        </Description>
+      </Argument>
+      <Argument name="items" type="List">
+        <Description>
+          List of Certifiable items that are currently part of the
+          certification for this identity.  Any items that should be excluded
+          from the certification should be deleted from this list and added
+          to the itemsToExclude list.
+        </Description>
+      </Argument>
+      <Argument name="itemsToExclude" type="List">
+        <Description>
+          A List of Certifiable items that should not be included in the
+          certification.  This list will be empty when the rule is executed
+          and any items that should not be part of the certification should
+          be moved from the items list to the itemsToExclude list.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="explanation" type="String">
+        <Description>
+          An optional explanation describing why the items were excluded.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[import sailpoint.object.*;  
+import sailpoint.tools.*;  
+import sailpoint.api.IdentityService;  
+import sailpoint.api.certification.DataOwnerCertificationBuilder.DataOwnerCertifiable;  
+import sailpoint.api.certification.DataOwnerCertifiableEntity.DataItem;  
+import java.util.List;  
+import java.util.ArrayList;  
+import org.apache.commons.logging.Log;  
+import org.apache.commons.logging.LogFactory;  
+  
+private Log logger = LogFactory.getLog("rule.ADGroupExclusion");  
+  
+if(null!=items){  
+  
+  if (state == null){  
+    logger.debug("Initialize state object...");  
+    state = new HashMap();  
+  }  
+  
+  List adEntitlements = (List) state.get("adEntitlements");  
+  
+  if (null == adEntitlements || adEntitlements.isEmpty()){  
+    //Get List of entitlements to include in certification from a custom object  
+    Custom inclusionCustom = context.getObjectByName(Custom.class, "AD Group Inclusions Custom");  
+    List customInclusionList = inclusionCustom.getList("ADGroupInclusion");  
+    adEntitlements = customInclusionList;  
+      
+    //Instead of having to get the inclusion custom object each time the exclusion rule is processed we put it in the state object  
+    state.put("adEntitlements", adEntitlements);  
+  }  
+  
+  Iterator it = items.iterator();  
+  
+  while (it.hasNext()){  
+    Certifiable certifiable = it.next();  
+  
+    Entitlements ents = null;  
+    Identity identity = null;  
+      logger.debug("Certifiable is Entitlements");  
+    if(certifiable instanceof Entitlements){  
+      ents = (Entitlements) certifiable;  
+    }  
+    else if(certifiable instanceof DataOwnerCertifiable){  
+      logger.debug("Certifiable is DataOwnerCertifiable");  
+      ents = certifiable.getEntitlements();  
+    }  
+      
+    if(null!=ents){  
+      Attributes attrs = ents.getAttributes();  
+      List entlist = attrs.getKeys();  
+      Iterator entit = entlist.iterator();  
+  
+      while(entit.hasNext()){  
+        String entAttrName = entit.next();   
+        String entAttrVal = attrs.getString(entAttrName);  
+  
+        if(null!=adEntitlements && !adEntitlements.contains(entAttrVal)){  
+              //Exclude all entitlements on the identity that are not in the custom inclusion list  
+              itemsToExclude.add(certifiable);  
+        }  
+      }  
+    }  
+  }  
+  items.removeAll(itemsToExclude);  
+}  
+  
+  
+return "";]]></Source>
+</Rule>

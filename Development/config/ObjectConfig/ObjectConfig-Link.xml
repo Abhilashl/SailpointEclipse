@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ObjectConfig PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<ObjectConfig name="Link">
+  <ObjectAttribute displayName="Inactive account" editMode="ReadOnly" name="inactive" type="string">
+    <RuleRef>
+      <Reference class="sailpoint.object.Rule" name="InactiveAccount"/>
+    </RuleRef>
+    <AttributeSource name="GlobalRule:InactiveAccount">
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="InactiveAccount"/>
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Last login" editMode="ReadOnly" name="lastLogin" type="date">
+    <AttributeSource name="krbLastSuccessfulAuth">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Redhat LDAP test.aciww.com"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="LastLoginDate">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="lastlogindate">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="TST Clarity"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="lastLogonTimestamp">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Account Type" editMode="Permanent" name="accountType" namedColumn="true" type="string">
+    <RuleRef>
+      <Reference class="sailpoint.object.Rule" name="aci_AccountType"/>
+    </RuleRef>
+    <AttributeSource name="GlobalRule:aci_AccountType">
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_AccountType"/>
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+</ObjectConfig>

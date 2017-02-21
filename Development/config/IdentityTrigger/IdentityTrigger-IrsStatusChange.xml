@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE IdentityTrigger PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<IdentityTrigger attributeName="irsStatus" handler="sailpoint.api.WorkflowTriggerHandler" name="IRS Status Change" newValueFilter="" oldValueFilter="" type="AttributeChange">
+  <Description>IRS status has changed for an individual.  Change in an individuals IRS Status (IRS Certified, IRS Failed, IRS Preparation).  Send out email notifications</Description>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="steve.nuffer@aciworldwide.com"/>
+  </Owner>
+  <HandlerParameters>
+    <Attributes>
+      <Map>
+        <entry key="workflow" value="8a8596e4584a02a401584ab1a4bf0030"/>
+      </Map>
+    </Attributes>
+  </HandlerParameters>
+  <Selector>
+    <IdentitySelector>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_LifeCycleAuthIdentity"/>
+      </RuleRef>
+    </IdentitySelector>
+  </Selector>
+</IdentityTrigger>

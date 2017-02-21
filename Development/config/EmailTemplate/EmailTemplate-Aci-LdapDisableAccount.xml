@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="ACI - LDAP Disable Account">
+  <Body>
+&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+table, th, td {
+    border: 1px solid black;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1 style="text-align:center"&gt;&lt;img src="https://identitydev.am.tsacorp.com/identityiq/images/ACI/01.png"&gt;&lt;/h1&gt;
+&lt;p style="text-align:center"&gt;Please disable Redhat LDAP Account for below &lt;/p&gt;
+&lt;table align="center"&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Name:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$firstname $lastname &lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Application Name:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$appName&lt;/td&gt;		
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b&gt;Account Name:&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;$nativeId&lt;/td&gt;		
+  &lt;/tr&gt;
+&lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+ </Body>
+  <Description>
+	Email Template for Terminations 
+  </Description>
+  <Subject>
+	Terminate ldap account request - $firstname $lastname 
+  </Subject>
+</EmailTemplate>

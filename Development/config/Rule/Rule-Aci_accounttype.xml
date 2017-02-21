@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_AccountType" type="LinkAttribute">
+  <Description>This rule is used when promoting account attributes from Links during aggregation.</Description>
+  <Signature returnType="Object">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="environment">
+        <Description>
+          The optional arguments passed from the task executor, if the rule is running within a task.
+        </Description>
+      </Argument>
+      <Argument name="link">
+        <Description>
+          The Link whose attribute is being promoted.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="value">
+        <Description>
+          An Object to be used as the attribute value.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[/*
+    Rule:  aci_AccountType
+    
+    Author:  Steve Nuffer
+	
+    Date:  October 6, 2016
+    Version:  2.1
+
+*/
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import sailpoint.tools.Util; 
+import sailpoint.api.IdentityService;
+
+// Declare a logger class
+Logger logger = Logger.getLogger("com.aci.rule.aci_AccountType");
+
+//Setup Variables Custom Map
+Custom custom = context.getObjectByName(Custom.class,"accountTypeMap");
+String tmpAcctType = "Unknown";
+Application app = link.getApplication();
+String appConnectorType = app.getConnector();
+Identity identityObj = link.getIdentity();
+String identityEmail = identityObj.getEmail();
+boolean authIdentity = identityObj.isCorrelated();
+String identitytName  = identityObj.getDisplayName();
+IdentityService identitySvc = new IdentityService(context);
+
+// Based upon connector Type
+switch (appConnectorType) {
+    //**************************************************************************
+    //*****  Active Directory
+    case "sailpoint.connector.ADLDAPConnector":
+        // Get the Active Directory's Attributes
+        String acctSamName = link.getAttribute("sAMAccountName");
+        String acctDistinguishedName = link.getAttribute("distinguishedName");
+        String acctMail = link.getAttribute("mail");
+              
+        if ( acctSamName != null && acctSamName != void && !(acctSamName.equals("")) ) {
+              
+            //********************
+            // Check if Account Type = Service
+            if ( acctDistinguishedName.toLowerCase().contains("ou=service accounts") ) {
+                tmpAcctType = "Service";
+            }
+
+            //********************
+            // Check if Account Type = Personal-Primary OR Personal-Other
+            if ( authIdentity ) {
+                if ( null != acctMail ) {
+                    tmpAcctType = "Personal-Primary";
+                } else {
+                    tmpAcctType = "Personal-Other";
+                }
+            }
+            
+            //********************
+            // Check the XML file for special cases
+            try {
+               tmpAcctType	= custom.get("Active Directory").get("Users").get(acctSamName).get("Account Type");
+            } catch(Exception e) {
+                ;  // Do nothing
+            }    
+        }
+        
+        logger.debug("Active Directory (" + identitytName + ")[" + authIdentity + "] acctSamName=" + acctSamName + " identityEmail=" + identityEmail + " AcctType=" + tmpAcctType );
+        break;
+     //**************************************************************************
+     //*****  Salesforce
+     case "sailpoint.connector.ForceConnector":
+        // Get the applications native account
+        String acctNativeIdentity = link.getNativeIdentity();
+        String acctMail = link.getAttribute("Email");
+        String acctUserType = link.getAttribute("UserType");
+        String acctProfileName = link.getAttribute("ProfileName");
+
+        // Authoritative Application
+        if ( authIdentity ) {
+            int numLinks = identitySvc.countLinks( identityObj, app);
+            // Single Account?
+            if ( numLinks == 1 ) {
+                // Single
+                tmpAcctType = "Personal-Primary"; 
+            } else {
+                // Multiple
+                // Check UserType for Standard and matching email to SF Username
+                if ( "Standard".equalsIgnoreCase(acctUserType) && acctNativeIdentity.equalsIgnoreCase(identityEmail) ) {
+                    tmpAcctType = "Personal-Primary"; 
+                } else {
+                    tmpAcctType = "Personal-Other"; 
+                }
+            }
+            // Generic, Service, System?
+            if ( "API Only User".equalsIgnoreCase(acctProfileName) ) 
+                tmpAcctType="Service";
+        }
+ 
+        //********************
+        // Check the XML file for special cases
+        try {
+           tmpAcctType	= custom.get("Salesforce").get("Users").get(acctNativeIdentity).get("Account Type");
+        } catch(Exception e) {
+            ;  // Do nothing
+        }
+ 
+        logger.debug("Salesforce (" + identitytName + ")[" + authIdentity + "] acctNativeIdentity=" + acctNativeIdentity + " identityEmail=" + identityEmail + " AcctType=" + tmpAcctType );
+        break;
+    //**************************************************************************
+    //*****  Others
+    default:
+        // Authoritative Application
+        if ( app.isAuthoritative() )
+            tmpAcctType = "Personal-Primary"; 
+    
+        String acctNativeIdentity = link.getNativeIdentity();   
+        logger.debug("appConnectorType=" + appConnectorType + " (" + identitytName + ")[" + authIdentity + "] acctNativeIdentity=" + acctNativeIdentity + " identityEmail=" + identityEmail + " AcctType=" + tmpAcctType );
+    break;
+        
+} // switch end
+
+return tmpAcctType;]]></Source>
+</Rule>

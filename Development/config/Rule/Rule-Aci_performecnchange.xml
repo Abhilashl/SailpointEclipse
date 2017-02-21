@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_PerformECNChange" type="IdentityTrigger">
+  <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+  <Signature returnType="boolean">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="previousIdentity">
+        <Description>
+          The identity before the refresh/aggregation (this will be null when an
+          identity is created).
+        </Description>
+      </Argument>
+      <Argument name="newIdentity">
+        <Description>
+          The identity after the refresh/aggregation (this will be null when an
+          identity is deleted).
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="result">
+        <Description>
+          A boolean describing the result of the rule.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[/*
+    Rule:  aci_PerformECNChange
+    Author:  Steve Nuffer
+	
+    Date:  November 11, 2016	
+    Version: 1.42
+    
+    If ( Change Dept, Location, Department #, Title) AND (CURRENT_EMPLOYEE_FLAG Y --> Y)
+        Send ECN
+*/
+import org.apache.log4j.Logger; 
+import sailpoint.object.*;
+import sailpoint.tools.Util;
+
+Logger logger = Logger.getLogger("com.aci.rule.aci_PerformECNChange");
+logger.debug("aci_PerformECNChange");
+
+boolean performLCM = false;
+
+// The instanceof operator returns false if the object is null or void
+// as well as if it is a different object type.
+if (!(previousIdentity instanceof Identity) ){
+    // New Hire or Error on newIdentity
+    logger.debug("    Previous Identity Null ");
+    return false;
+}
+
+if ( !(newIdentity instanceof Identity)) {
+    // New Hire or Error on newIdentity
+    logger.debug("    New Identity Null");
+    return false;
+}
+
+// Exit if this is this a Hire or Rehire
+if ( previousIdentity.isInactive() || newIdentity.isInactive() ) {
+    // Rehire and Hire
+    logger.debug("    Rehire or Hire");
+    return false;
+}
+
+String identityPersonID = newIdentity.getAttribute("personId");
+logger.debug("    PERSON_ID=" + identityPersonID);
+
+// Location
+String oldLocation = previousIdentity.getAttribute("location");
+String newLocation = newIdentity.getAttribute("location");
+if ( !Util.isNotNullOrEmpty(oldLocation) ) oldLocation = "";
+if ( !Util.isNotNullOrEmpty(newLocation) ) newLocation = "";
+
+// Title
+String oldemployeeTitle = previousIdentity.getAttribute("employeeTitle");
+String newemployeeTitle = newIdentity.getAttribute("employeeTitle");
+if ( !Util.isNotNullOrEmpty(oldemployeeTitle) ) oldemployeeTitle = "";
+if ( !Util.isNotNullOrEmpty(newemployeeTitle) ) newemployeeTitle = "";
+
+// Previous Department Number
+String oldDeptName = previousIdentity.getAttribute("DEPT_NAME");
+String oldDeptNum = "";
+if ( Util.isNotNullOrEmpty(oldDeptName) ) {
+    String tmpDeptNum = oldDeptName.replaceAll("[^0-9]", " ");
+    oldDeptNum = tmpDeptNum.substring(0, tmpDeptNum.indexOf(' '));
+} 
+logger.debug("    oldDeptNum=" + oldDeptNum);
+
+// New Department Number
+String newDeptName = newIdentity.getAttribute("DEPT_NAME");
+String newDeptNum = "";   
+if ( Util.isNotNullOrEmpty(newDeptName) ) {
+    String tmpDeptNum = newDeptName.replaceAll("[^0-9]", " ");
+    newDeptNum = tmpDeptNum.substring(0, tmpDeptNum.indexOf(' '));
+} 
+logger.debug("    newDeptNum=" + newDeptNum);
+
+// Previous Manager
+String oldManager = "";
+String oldManagerPersonID = "";
+Identity oldIdentityObjMgr = previousIdentity.getManager();
+if ( oldIdentityObjMgr instanceof Identity ) {
+    oldManager = oldIdentityObjMgr.getDisplayName();
+    oldManagerPersonID = oldIdentityObjMgr.getAttribute("personId");
+}
+
+// New Manager
+String newManager = "";
+String newManagerPersonID = "";
+Identity newIdentityObjMgr = newIdentity.getManager();
+if ( newIdentityObjMgr instanceof Identity ) {
+    newManager = newIdentityObjMgr.getDisplayName();
+    newManagerPersonID = newIdentityObjMgr.getAttribute("personId");
+}
+
+if ( !Util.isNotNullOrEmpty(oldManager) ) oldManager = "";
+if ( !Util.isNotNullOrEmpty(newManager) ) newManager = "";
+if ( !Util.isNotNullOrEmpty(oldManagerPersonID ) ) oldManagerPersonID = "";
+if ( !Util.isNotNullOrEmpty(newManagerPersonID ) ) newManagerPersonID = "";
+
+// Compare old and new values
+if ( ! oldLocation.equalsIgnoreCase(newLocation) ) performLCM = true;
+if ( ! oldDeptNum.equalsIgnoreCase(newDeptNum) ) performLCM = true;
+if ( ! oldemployeeTitle.equalsIgnoreCase(newemployeeTitle) ) performLCM = true;
+if ( ! oldManagerPersonID.equalsIgnoreCase(newManagerPersonID) ) performLCM = true;
+
+logger.debug ("    performLCM=" + performLCM);
+
+return performLCM;]]></Source>
+</Rule>

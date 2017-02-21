@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ObjectConfig PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<ObjectConfig name="Identity">
+  <ObjectAttribute displayName="att_user_name" name="name" silent="true" system="true" type="string"/>
+  <ObjectAttribute displayName="att_detected_roles" groupFactory="true" name="bundles" system="true" type="string"/>
+  <ObjectAttribute displayName="att_detected_role_summary" name="bundleSummary" silent="true" system="true" type="string"/>
+  <ObjectAttribute displayName="att_assigned_roles" groupFactory="true" name="assignedRoles" system="true" type="string"/>
+  <ObjectAttribute displayName="att_assigned_role_summary" name="assignedRoleSummary" silent="true" system="true" type="string"/>
+  <ObjectAttribute displayName="att_exceptions" name="exceptions" silent="true" system="true" type="string"/>
+  <ObjectAttribute displayName="att_last_refresh" name="lastRefresh" silent="true" system="true" type="string"/>
+  <ObjectAttribute displayName="att_last_login" name="lastLogin" silent="true" system="true" type="string"/>
+  <ObjectAttribute displayName="att_capabilities" name="capabilities" system="true" type="string"/>
+  <ObjectAttribute displayName="att_composite_score" name="scorecard.compositeScore" silent="true" system="true" type="string"/>
+  <ObjectAttribute displayName="DOB" editMode="ReadOnly" name="DATE_OF_BIRTH" type="string">
+    <AttributeSource name="DATE_OF_BIRTH">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="DATE_OF_BIRTH">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Person type" editMode="ReadOnly" groupFactory="true" name="personType" namedColumn="true" type="string">
+    <AttributeSource name="PERSON_TYPE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="PERSON_TYPE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Nick Name" editMode="ReadOnly" name="KNOWN_AS" type="string">
+    <AttributeSource name="KNOWN_AS">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="KNOWN_AS">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Middle name" editMode="UntilFeedValueChanges" name="MIDDLE_NAME" type="string">
+    <AttributeSource name="MIDDLE_NAMES">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="MIDDLE_NAMES">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="initials" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Assignment Start Date" editMode="ReadOnly" name="EMP_START_DATE" type="string">
+    <AttributeSource name="EMP_START_DATE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="EMP_START_DATE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Enterprise End Date" editMode="ReadOnly" name="enterpriseEndDate" type="string">
+    <AttributeSource name="ACTUAL_TERMINATION_DATE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="ACTUAL_TERMINATION_DATE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Enterprise Start Date" editMode="ReadOnly" name="enterpriseStartDate" type="string">
+    <AttributeSource name="ENTERPRISE_HIRE_DATE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Mobile Phone" editMode="ReadOnly" name="mobilePhone" type="string">
+    <AttributeSource name="MOBILE_PHONE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Title" editMode="UntilFeedValueChanges" name="employeeTitle" namedColumn="true" standard="true" type="string">
+    <AttributeSource name="REGIONAL_TITLE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="REGIONAL_TITLE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="Title" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="title" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Location" editMode="ReadOnly" groupFactory="true" name="location" namedColumn="true" type="string">
+    <AttributeSource name="LOCATION">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="LOCATION">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="physicalDeliveryOfficeName" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="att_email" editMode="ReadOnly" name="email" standard="true" type="string">
+    <AttributeSource name="AppRule: aci_ADFindPrimaryEmail DEV Active Directory tst.aciww.com">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_ADFindPrimaryEmail"/>
+      </RuleRef>
+    </AttributeSource>
+    <AttributeSource name="EMPLOYEE_EMAIL">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="EMPLOYEE_EMAIL">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="att_manager_status" name="managerStatus" system="true" type="boolean"/>
+  <ObjectAttribute displayName="att_rights" name="rights" system="true" type="string"/>
+  <ObjectAttribute displayName="att_workgroups" name="workgroups" system="true" type="string"/>
+  <ObjectAttribute displayName="Person ID" editMode="UntilFeedValueChanges" name="personId" namedColumn="true" type="string">
+    <AttributeSource name="PERSON_ID">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="PERSON_ID">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="employeeID" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="Person_ID__c" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="City" editMode="ReadOnly" name="city" type="string">
+    <AttributeSource name="TOWN_OR_CITY">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="l" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="City" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Country" editMode="ReadOnly" name="country" namedColumn="true" type="string">
+    <AttributeSource name="COUNTRY">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="COUNTRY">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="c" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="Country" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Address" editMode="ReadOnly" name="address" type="string">
+    <AttributeSource name="ADDRESS_LINE_1">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="streetAddress" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="Street" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Region" editMode="UntilFeedValueChanges" name="region" type="string">
+    <AttributeSource name="REGION_2">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="st" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="State" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Postal Code" editMode="ReadOnly" name="postalCode" type="string">
+    <AttributeSource name="POSTAL_CODE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="postalCode" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="PostalCode" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Company" editMode="ReadOnly" name="company" namedColumn="true" type="string">
+    <AttributeSource name="AppRule: aci_DetermineCompany DEV Fusion HCM">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_DetermineCompany"/>
+      </RuleRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="company" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="CompanyName" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Phone" editMode="UntilFeedValueChanges" name="WORK_TELEPHONE" type="string">
+    <AttributeSource name="AppRule: aci_CombinePhoneAttr DEV Fusion HCM">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_CombinePhoneAttr"/>
+      </RuleRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="telephoneNumber" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="Phone" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Division" editMode="ReadOnly" name="division" namedColumn="true" type="string">
+    <AttributeSource name="DIVISION">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="Division" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Network ID" editMode="ReadOnly" name="networkId" namedColumn="true" type="string">
+    <AttributeSource name="AppRule: aci_ADFindPrimaryNetworkID DEV Active Directory tst.aciww.com">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_ADFindPrimaryNetworkID"/>
+      </RuleRef>
+    </AttributeSource>
+    <AttributeSource name="NETWORK_ID">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="NETWORK_ID">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="att_first_name" editMode="UntilFeedValueChanges" name="firstname" standard="true" type="string">
+    <AttributeSource name="AppRule: aci_DisplayName DEV Fusion HCM">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_LegalOrKnownAs"/>
+      </RuleRef>
+    </AttributeSource>
+    <AttributeSource name="AppRule: aci_LegalOrKnownAs DEV HRMS">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_LegalOrKnownAs"/>
+      </RuleRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="givenName" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="FirstName" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Display Name" editMode="ReadOnly" name="displayName" standard="true" type="string">
+    <AttributeTargets>
+      <AttributeTarget name="displayName" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+        <RuleRef>
+          <Reference class="sailpoint.object.Rule" name="aci_setDisplayName"/>
+        </RuleRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="att_inactive" editMode="ReadOnly" name="inactive" standard="true" type="string">
+    <AttributeSource name="AppRule: aci_SetEmployeeStatus DEV Fusion HCM">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_SetEmploymentStatus"/>
+      </RuleRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="extensionAttribute11" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+        <RuleRef>
+          <Reference class="sailpoint.object.Rule" name="aci_TransformInactive"/>
+        </RuleRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Term Notification" editMode="UntilFeedValueChanges" name="termNotification" namedColumn="true" type="string">
+    <AttributeSource name="TERM_NOTIFICATION">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Rank" editMode="ReadOnly" groupFactory="true" name="rank" namedColumn="true" type="string">
+    <AttributeSource name="RANK">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="RANK">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="rank__c" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Identity Type" editMode="UntilFeedValueChanges" name="identityType" namedColumn="true" type="string">
+    <RuleRef>
+      <Reference class="sailpoint.object.Rule" name="aci_IdentityType"/>
+    </RuleRef>
+    <AttributeSource name="GlobalRule:aci_IdentityType">
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_IdentityType"/>
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Manager" editMode="ReadOnly" groupFactory="true" name="manager" standard="true" type="sailpoint.object.Identity">
+    <AttributeSource name="SUPERVISOR_ID">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="SUPERVISOR_ID">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="manager" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+        <RuleRef>
+          <Reference class="sailpoint.object.Rule" name="aci_setManager"/>
+        </RuleRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="IRS Status" editMode="ReadOnly" name="irsStatus" namedColumn="true" type="string">
+    <AttributeSource name="IRS_FLAG_STATUS">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="IRS Certification Date" editMode="ReadOnly" name="irsCertDate" namedColumn="true" type="string">
+    <AttributeSource name="IRS_CERTIFIED_DATE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Department Name" editMode="ReadOnly" name="DEPT_NAME" type="string">
+    <AttributeSource name="DEPT_NAME">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="DEPT_NAME">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="department" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="Department" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="ACI_Department_Number__c" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+        <RuleRef>
+          <Reference class="sailpoint.object.Rule" name="aci_DeptNumber"/>
+        </RuleRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="att_last_name" editMode="Permanent" name="lastname" standard="true" type="string">
+    <AttributeSource name="LAST_NAME">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV Fusion HCM"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="LAST_NAME">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="DEV HRMS"/>
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="sn" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="DEV Active Directory tst.aciww.com"/>
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="LastName" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="TST Salesforce"/>
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+</ObjectConfig>

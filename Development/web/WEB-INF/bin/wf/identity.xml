@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Map PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Map>
+	<entry key="identityName" value="first.last@aciworldwide.com"/>
+	<entry key="notifyManager" value="true"/>
+	<entry key="notifyRemedyForce" value="true"/>	
+	<entry key="notifyMgrLateNotice" value="true"/>
+	<entry key="notifyIRSContact" value="true"/>	
+	<entry key="auditEvent" value="true"/>	
+	<entry key="createAccounts" value="true"/>	
+	<entry key="disableAccounts" value="true"/>
+</Map>

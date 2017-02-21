@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QuickLink PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<QuickLink action="workflow" category="Custom" messageKey=" Immediate Termination" name="ACI - Immediate TERM">
+  <Attributes>
+    <Map>
+      <entry key="workflowName" value="ACI - Immediate TERM"/>
+      <entry key="workflowSuccess" value="Request Submitted Successfully"/>
+    </Map>
+  </Attributes>
+</QuickLink>

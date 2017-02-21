@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE GroupDefinition PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<GroupDefinition indexed="true" name="GSD Supervisors" private="true">
+  <Description>Based upon current GSD Managers and titles with "Supv Service Desk Support"</Description>
+  <GroupFilter>
+    <CompositeFilter operation="AND">
+      <Filter operation="EQ" property="employeeTitle" value="Supv Service Desk Support"/>
+      <CompositeFilter operation="OR">
+        <Filter matchMode="ANYWHERE" operation="LIKE" property="manager.name" value="jeff.gordon"/>
+        <Filter matchMode="ANYWHERE" operation="LIKE" property="manager.name" value="pavan.kanth"/>
+      </CompositeFilter>
+    </CompositeFilter>
+  </GroupFilter>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="steve.nuffer@aciworldwide.com"/>
+  </Owner>
+</GroupDefinition>

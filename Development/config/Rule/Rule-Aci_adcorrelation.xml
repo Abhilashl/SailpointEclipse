@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_ADCorrelation" type="Correlation">
+  <Description>Identity Correlation Rules are used to find identities to which new accounts can be attached.
+
+A correlation rule must return a Map with one of the specified Return arguments.</Description>
+  <Signature returnType="Map">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="environment" type="Map">
+        <Description>
+          Arguments passed to the aggregation task.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application being aggregated.
+        </Description>
+      </Argument>
+      <Argument name="account">
+        <Description>
+          A sailpoint.object.ResourceObject returned from the
+          collector.
+        </Description>
+      </Argument>
+      <Argument name="link">
+        <Description>
+          Existing link to this account.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="identityName">
+        <Description>
+          The name of an Identity object.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+          A fully resolved Identity object if the rule wants
+          to do its own queries to locate the identity.
+        </Description>
+      </Argument>
+      <Argument name="identityAttributeName">
+        <Description>
+          The name of the extended attribute that can be used
+          to locate an existing identity.
+        </Description>
+      </Argument>
+      <Argument name="identityAttributeValue">
+        <Description>
+          The value of the named extended attribute that can be used
+          to locate an existing identity. This attribute is used
+          together with the identityAttributeName argument.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[
+
+/*
+    Rule:  aci_ADCorrelation
+    
+    Author:  Steve Nuffer
+	
+	Date:  January 24, 2016
+    Version:
+
+*/
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import sailpoint.api.*;
+import sailpoint.tools.Util;
+
+// Declare a logger class
+Logger logger = Logger.getLogger("com.aci.rule.aci_ADCorrelation");
+//logger.debug("com.aci.rule.aci_ADCorrelation - START");
+
+// Setup Variables
+String appName = link.getApplicationName();
+String acctSamAccountName = account.getStringAttribute("sAMAccountName");
+String appConnectorType = application.getConnector() ;
+Identity identity = link.getIdentity();
+String identitytName  = identity.getDisplayName();
+List appAccounts = identity.getLinks(application);
+Boolean authIdentity = identity.isCorrelated();
+String idendityPersonID = identity.getStringAttribute("personId");
+String acctPrincipalName = account.getStringAttribute("msDS-PrincipalName");
+String acctMail= account.getStringAttribute("mail");
+
+// Default value for AccountType
+String tmpAcctType = "not set";
+
+// Based upon the number of accounts do:
+switch ( appAccounts.size() ) {
+    // Only one application account in the same application
+    case 1:
+        if ( authIdentity ) {
+		    // If only one account for an authoritative identity, it's Personal
+         	tmpAcctType="Personal";
+			//logger.debug("A-personal," + identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType + "," + idendityPersonID);
+        } else {
+		    // Can be of any other type (generic, service, system, or Elevated)
+			tmpAcctType = "Orphan";
+            //logger.debug("B-orphan," + identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType+ "," + idendityPersonID);
+        }
+        break;
+    default:
+	// More then two application accounts in the same application
+        if ( authIdentity ) {
+			//Does the application account have mail then it's a personal account
+			if ( acctMail != null && !acctMail.isEmpty()) {
+			    // The account has a mail address defined
+				//Does the mail account have the actual samAccountName defined in it?
+				if ( !acctMail.toLowerCase().contains(acctSamAccountName.toLowerCase()) ) {
+				    // The samAccountName is not found in the mail, it's Personal
+			        tmpAcctType="Personal";	    
+				    //logger.debug("C-personal," + identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType + "," + idendityPersonID);
+				}
+            }
+        }
+        // Can be of any other type (generic, service, system, or Elevated)         		
+        break;
+}
+logger.debug(identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType + "," + idendityPersonID);
+/*
+// Set the accountType if properly defined
+switch ( tmpAcctType ) {
+    case "PersonalA":
+	case "Generic":
+	case "Service":
+	case "System":
+	case "Elevated":
+	    //Set the account type attribute
+	    //link.setAttribute("accountType", tmpAcctType);
+		//logger.debug("AccountType is defined," + identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType);
+		;
+        break;
+	default:
+	// Account type is not defined
+	//if ( logger.isDebugEnabled() ) {
+	    //account.setAttribute("accountType", "notset");
+        //logger.debug("AccountType not defined," + identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType);
+	//}
+	;
+	break;
+}
+*/
+
+// the correlation attribute specification and the simple attribute match will only be attempted if the rule does not return an Identity.
+//Map returnMap = new HashMap();
+//return returnMap;
+
+]]></Source>
+</Rule>

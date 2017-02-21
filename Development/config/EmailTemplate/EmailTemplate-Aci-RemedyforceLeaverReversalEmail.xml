@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="ACI - RemedyForce Leaver Reversal Email">
+  <Body>
+  &lt;html&gt;
+
+#if ($personType.toLowerCase().contains("employee") )
+&lt;h2&gt;$personType TERM Reversal&lt;/h2&gt;
+#else
+&lt;h2&gt;$personType Extension to $endDate&lt;/h2&gt;
+#end          
+    
+&lt;pre&gt;
+&lt;h3&gt;----- $personType Information  -----&lt;/h3&gt;
+     Last Name:   $lastname
+     First Name:  $firstname
+
+#if ($endDate)
+     Term Date:   $endDate
+#end
+    
+     Title:       $employeeTitle
+     Person Type: $personType
+     Division:    $division
+     Department:  $department
+
+     Country:     $country
+     Location:    $location
+     Address:     $address
+     City:        $city
+     Region:      $region
+     Postal code: $postalCode    
+
+     Manager:        $managerName
+     Manager Email:  $managerEmail
+
+     ECN Effective Date: $effectiveDate    
+          
+&lt;h3&gt;-----  Account Information  -----&lt;/h3&gt;
+     Network ID:  $networkId
+     Email:       $employeeEmail
+&lt;br&gt;
+&lt;br&gt;
+&lt;B&gt;Statement of Confidentiality: &lt;/B&gt;
+This e-mail message and any attachments may contain confidential, proprietary or on-public information. This information is intended solely for the designated recipient(s). If an addressing or transmission error has misdirected this e-mail, please notify the sender immediately and destroy this e-mail. Any review, dissemination, use or reliance upon this information by unintended recipients is prohibited.     
+&lt;/pre&gt;     
+&lt;html&gt;
+ </Body>
+  <Description>
+	Email Template for Network ID. 
+  </Description>
+  <Signature>
+    <Inputs>
+      <Argument name="firstname" type="string">
+        <Description>Identity</Description>
+      </Argument>
+      <Argument name="lastname" type="string">
+        <Description>Identity</Description>
+      </Argument>
+      <Argument name="networkId" type="string">
+        <Description>Network Id </Description>
+      </Argument>
+      <Argument name="email" type="string">
+        <Description>Employee email </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Subject>
+#if ($personType.toLowerCase().contains("employee") )
+     Term Reversal - $lastname, $firstname
+#else
+     Extension - $lastname, $firstname
+#end      
+  </Subject>
+</EmailTemplate>

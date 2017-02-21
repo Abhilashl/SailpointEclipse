@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_writeEmailToFile" type="Listener">
+  <Description>This rule can be used when the ObjectAttribute being listened to has changed.</Description>
+  <Signature returnType="void">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="environment">
+        <Description>
+          Optional arguments passed from the task executor, if the rule is running within a task.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+          The identity which owns the attribute.
+        </Description>
+      </Argument>
+      <Argument name="attributeDefinition">
+        <Description>
+          The definition of the ObjectAttribute.
+        </Description>
+      </Argument>
+      <Argument name="attributeName">
+        <Description>
+          The name of the ObjectAttribute.
+        </Description>
+      </Argument>
+      <Argument name="oldValue">
+        <Description>
+          The original value of the ObjectAttribute.
+        </Description>
+      </Argument>
+      <Argument name="newValue">
+        <Description>
+          The new value of the ObjectAttribute.
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Source><![CDATA[
+
+/*
+        Rule:  aci_writeEmailToFile
+        Author:  Steve Nuffer
+	
+	
+	Version: .1000
+
+*/
+import org.apache.log4j.Logger; 
+import sailpoint.object.*;
+import org.apache.jmeter.services.FileServer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+Logger logger = Logger.getLogger("com.aci.rule.aci_writeAttributeToFile");
+
+logger.debug("(" + identity.getDisplayName() + ") old=" + oldValue + " new=" + newValue);
+
+DateFormat dateFileFormat = new SimpleDateFormat("yyyyMMdd.HHmmss.S");
+DateFormat dateEffectiveFormat = new SimpleDateFormat("yyyy/MM/dd");
+Date currentDate = new Date();
+String csvFileName = %%SHARE_BASE%%"mft\\inbound\\email." + dateFileFormat.format(currentDate) + ".txt";  // TOKEN
+
+// Create the File handle
+File csvFile = new File(csvFileName);
+try
+{    
+    fileWriter = new PrintWriter( new FileOutputStream( csvFile ));
+}
+catch ( Exception e )
+{
+    // User doesn't have permission to write  
+    ; logger.debug("error on fileWriter");    
+}
+String identitytName  = identity.getDisplayName();
+String idendityPersonID = identity.getStringAttribute("personId");
+String identityPersonIndex = "300000099999999";
+String identityEmailIndex = "300000099999999";
+
+fileWriter.println("COMMENT Business Entity : Person [" + identitytName + "]");
+fileWriter.println("METADATA|PersonEmail|EmailAddressId|PersonId|PersonNumber|DateFrom|DateTo|EmailType|EmailAddress|PrimaryFlag");
+fileWriter.println("MERGE|PersonEmail|" + identityEmailIndex + "|" + identityPersonIndex + "|" + idendityPersonID + "|" + dateEffectiveFormat.format(currentDate) + "|4712/12/31|W1|" + newValue + "|Y");
+                
+// Close File handles
+fileWriter.flush();
+fileWriter.close();
+
+]]></Source>
+</Rule>

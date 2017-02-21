@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_ADAccountType" type="ResourceObjectCustomization">
+  <Description>This rule is configured on the application and is called after the connector has build a ResourceObject from the native application data.
+
+Initially designed for non-rule based connectors to add SPPrivileged flag to an object, but could be used to do any transformations.</Description>
+  <Signature returnType="ResourceObject">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="object">
+        <Description>
+          The ResourceObject built by the connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application that references the connector.
+        </Description>
+      </Argument>
+      <Argument name="connector">
+        <Description>
+          The connector object.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="resourceObject">
+        <Description>
+          The updated resource object.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[/*
+    Rule:  aci_ADAccountType
+    
+    Author:  Steve Nuffer
+	
+    Date:  February 1, 2016
+    Version:  1.0
+
+*/
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+
+// Declare a logger class
+Logger logger = Logger.getLogger("com.aci.rule.aci_ADAccountType");
+
+//Use Custom Map
+Custom custom = context.getObjectByName(Custom.class,"accountTypeMap");
+
+// Set Account Type to unknown
+object.put("accountType", "Unknown");
+String tmpacctType = "Unknown";
+
+// Get the Active Directory's Attributes
+String acctSamName = object.getAttribute("sAMAccountName");
+String acctDistinguishedName = object.getAttribute("distinguishedName");
+String acctMail = object.getAttribute("mail");
+
+//logger.debug( "lstMemberOf=" +  lstMemberOf);
+if ( acctSamName != null && acctSamName != void && !(acctSamName.equals("")) ) {
+
+    //********************
+    // Check the XML file for special cases
+	try {
+	    tmpacctType	= custom.get("Active Directory").get("Users").get(acctSamName).get("Account Type");
+    } catch(Exception e) {
+        ;  // Do nothing
+    }
+	
+    //********************
+    // Check if Account Type = Service
+    if ( acctDistinguishedName.toLowerCase().contains("ou=service accounts") ) {
+	    tmpacctType = "Service";
+    }
+
+    //********************
+    // Check if Account Type = Personal-Primary OR Personal-Other
+	if ( acctDistinguishedName.toLowerCase().contains("ou=useraccounts") ) {
+	    if ( null != acctMail ) {
+            tmpacctType = "Personal-Primary";
+        }  else {
+            tmpacctType = "Personal-Other";
+		}
+    }
+	
+	//if ( tmpacctType.equals("Unknown") {
+	//if ( cntOfAcctType == 0 ) {
+	logger.debug("acctSamName=" + acctSamName + " tmpAcctElevated=" + tmpAcctElevated + " tmpacctType=" + tmpacctType + " acctDistinguishedName=" + acctDistinguishedName );
+	//}
+}   
+
+object.put("accountType", tmpacctType);
+return object;
+
+]]></Source>
+</Rule>

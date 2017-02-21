@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_setDisplayName" type="IdentityAttributeTarget">
+  <Description>Identity attribute target rules are used to tranform identity attribute values that are being pushed to targets.</Description>
+  <Signature returnType="Object"/>
+  <Source><![CDATA[
+  
+/*
+    Rule:  aci_setDisplayName
+    
+    Author:  Steve Nuffer
+	
+    Date:  August 10, 2016
+    Version:  1.1
+
+*/
+
+import sailpoint.tools.Util;
+import org.apache.log4j.Logger; 
+
+Logger logger = Logger.getLogger("com.aci.rule.aci_setDisplayName");
+
+String firstName = identity.getFirstname();
+String lastName = identity.getLastname() ;
+
+String displayName = lastName + ", " + firstName;
+
+logger.debug("target.getApplication()" + target.getApplication());
+logger.debug("target.getApplication().getName=" + target.getApplication().getName());
+logger.debug("getKey()=" + target.getKey());
+
+// Update only if identity has an Authoritative App
+if ( identity.isCorrelated() ) {
+    // Authoritative App
+    return displayName;
+} else {
+    return null;
+}
+  
+  ]]></Source>
+</Rule>

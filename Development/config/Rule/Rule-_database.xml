@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="_Database">
+  <Description>This rule can be executed in the console or in debug mode to return information </Description>
+  <Signature returnType="String">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="environment" type="Map">
+        <Description>
+           Arguments passed to the aggregation or refresh task.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+           The Identity object that represents the user
+           that is being aggregated.
+        </Description>
+      </Argument>
+      <Argument name="attributeDefinition">
+        <Description>
+           The AttributeDefinition object for this attribute.
+        </Description>
+      </Argument>
+      <Argument name="link">
+        <Description>
+           The Link object from the Identity, if this is an application
+           mapping rule.  For global mapping rules this will be void.
+        </Description>
+      </Argument>
+      <Argument name="attributeSource">
+        <Description>
+          The AttributeSource object.
+        </Description>
+      </Argument>
+      <Argument name="oldValue">
+        <Description>
+          The original value of the application account attribute.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="attributeValue">
+        <Description>
+          The value of the attribute that should be populated.
+          The rule should return this value.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[
+import org.apache.log4j.Logger;
+import java.sql.Connection;  
+import java.sql.DriverManager;  
+import java.sql.PreparedStatement;  
+import java.sql.ResultSet;  
+import java.sql.SQLException;  
+import java.sql.Statement; 
+import java.util.ArrayList; 
+import java.util.Iterator; 
+import sailpoint.object.*;	  
+
+//Update staging table
+Logger  logger = Logger.getLogger("com.aci.rule.database");
+
+//Identity identObj = context.getObjectByName(Identity.class,identityName);
+
+//Application app = context.getObjectByName(Application.class, "UAT HRMS");
+
+String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+//String user = app.getAttributeValue("user");
+//String pass = context.decrypt(app.getAttributeValue("password"));
+//String url=app.getAttributeValue("url");
+String user = "aci_identityiq";
+String pass = "slpD3vbu1ld!";
+//String url = "jdbc:sqlserver://cov2slpdevdb01\\sqlexpress;databaseName=aci_identityiq;integratedSecurity=true"; 
+String url = "jdbc:sqlserver://COV2SLPDEVDB01:1433;databaseName=aci_identityiq;";
+
+
+//String sqlQuery = "insert into ACI_CUSTOM.ACI_EMPLOYEE_UPDATE_FROM_IDM (person_id, network_id, email_address, phone_number, user_id, termination_date, creation_date) values(?, ?, ?,?,?,sysdate,sysdate)";  
+String sqlQuery = "SELECT  [id],[app_id],[app_name] FROM [aci_identityiq].[dbo].[application];";
+
+Connection dbCxn = null;
+logger.debug("try");
+try {
+    driverClazz = Class.forName(driverClass);
+    dbCxn = DriverManager.getConnection(url, user, pass);  
+    logger.debug("Successfully connected to db");
+    
+    Statement stmt = dbCxn.createStatement();
+    ResultSet rs =  stmt.executeQuery(sqlQuery);
+    System.out.println("Id Name    Job");
+    while (rs.next()) {
+         int id = rs.getInt("id");
+         String app_name = rs.getString("app_name");
+         String app_id = rs.getString("app_id");
+         System.out.println(id + "  " + app_id + "   " + app_name);
+    }
+
+
+//ResultSet rs = prStmt.executeQuery();  
+}catch(Exception e){
+logger.error("Error occurred in new employee form processing", e);
+throw(e);
+//return false;
+}finally {
+dbCxn.close();
+}
+
+ ]]></Source>
+</Rule>

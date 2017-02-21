@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE IdentityTrigger PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<IdentityTrigger attributeName="termNotification" handler="sailpoint.api.WorkflowTriggerHandler" name="Fusion Leaver RemedyForce" newValueFilter="Y" oldValueFilter="N" type="AttributeChange">
+  <Description>Generate a Remedyforce Leaver ticket</Description>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="steve.nuffer@aciworldwide.com"/>
+  </Owner>
+  <HandlerParameters>
+    <Attributes>
+      <Map>
+        <entry key="workflow" value="8a8596e454dd98970155191784501404"/>
+      </Map>
+    </Attributes>
+  </HandlerParameters>
+  <Selector>
+    <IdentitySelector>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_LifeCycleAuthIdentity"/>
+      </RuleRef>
+    </IdentitySelector>
+  </Selector>
+</IdentityTrigger>

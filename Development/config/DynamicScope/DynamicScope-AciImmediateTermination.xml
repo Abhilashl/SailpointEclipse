@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DynamicScope PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<DynamicScope name="ACI Immediate Termination">
+  <Description>Disable all accounts immediately</Description>
+  <PopulationRequestAuthority>
+    <MatchConfig customControl="(identityType == &quot;Personal&quot;) &amp;&amp; ( personType == &quot;Employee&quot; || personType == &quot;Contingent Worker&quot;)" enableCustomControl="true"/>
+  </PopulationRequestAuthority>
+  <Selector>
+    <IdentitySelector>
+      <PopulationRef>
+        <Reference class="sailpoint.object.GroupDefinition" name="GSD Supervisors"/>
+      </PopulationRef>
+    </IdentitySelector>
+  </Selector>
+</DynamicScope>

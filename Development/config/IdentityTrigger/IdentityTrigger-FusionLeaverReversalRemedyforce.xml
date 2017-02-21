@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE IdentityTrigger PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<IdentityTrigger handler="sailpoint.api.WorkflowTriggerHandler" name="Fusion Leaver Reversal RemedyForce" type="Rule">
+  <Description>Reverse or extend an employee or contingent termination.</Description>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="steve.nuffer@aciworldwide.com"/>
+  </Owner>
+  <HandlerParameters>
+    <Attributes>
+      <Map>
+        <entry key="workflow" value="8a8596e4572944e201572de4922a021a"/>
+      </Map>
+    </Attributes>
+  </HandlerParameters>
+  <TriggerRule>
+    <Reference class="sailpoint.object.Rule" name="aci_PerformReversal"/>
+  </TriggerRule>
+  <Selector>
+    <IdentitySelector>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="aci_LifeCycleAuthIdentity"/>
+      </RuleRef>
+    </IdentitySelector>
+  </Selector>
+</IdentityTrigger>

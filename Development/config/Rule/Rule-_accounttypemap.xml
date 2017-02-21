@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="_AccountTypeMap">
+  <Description>This rule can be executed in the console or in debug mode to return information </Description>
+  <Signature returnType="String">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="environment" type="Map">
+        <Description>
+           Arguments passed to the aggregation or refresh task.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+           The Identity object that represents the user
+           that is being aggregated.
+        </Description>
+      </Argument>
+      <Argument name="attributeDefinition">
+        <Description>
+           The AttributeDefinition object for this attribute.
+        </Description>
+      </Argument>
+      <Argument name="link">
+        <Description>
+           The Link object from the Identity, if this is an application
+           mapping rule.  For global mapping rules this will be void.
+        </Description>
+      </Argument>
+      <Argument name="attributeSource">
+        <Description>
+          The AttributeSource object.
+        </Description>
+      </Argument>
+      <Argument name="oldValue">
+        <Description>
+          The original value of the application account attribute.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="attributeValue">
+        <Description>
+          The value of the attribute that should be populated.
+          The rule should return this value.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[
+/*
+        Rule:  _AccountTypeMap
+        Author:  Steve Nuffer
+	
+	
+	Version: .1000
+
+*/
+import org.apache.log4j.Logger; 
+import sailpoint.object.*;
+
+Logger logger = Logger.getLogger("com.aci.rule.aci_ADAccountType");
+logger.debug ("rule.aci_ADAccountType");
+
+//Use Custom Map
+Custom custom = context.getObjectByName(Custom.class,"accountTypeMap");
+		
+// Set Account Type to unknown
+//object.put("accountType", "Unknown");
+String tmpacctType = "Unknown";
+String tmpAcctElevated = "false";
+
+// Get the Active Directory's Attributes
+//String acctSamName = object.getAttribute("sAMAccountName");
+String acctSamName = "Administrators";
+//String acctDistinguishedName = object.getAttribute("distinguishedName");
+
+//List lstMemberOf = (List)object.getAttribute("memberOf");
+
+//********************
+// Check if Account Type = System
+//Determine if this is a system Account
+try {
+    // Check in the Custom accountTypeMap for the account
+	tmpacctType = "System";
+    tmpAcctElevated = custom.get("Active Directory").get("Users").get(acctSamName);    
+} catch (Exception e) {
+    System.out.println("Error caught: Not System Account");
+}		
+
+//********************
+// Check if Account Type = Service
+//if ( acctSamName.toLowerCase.contains("ou=service accounts") ) {
+//    tmpacctType = "Service";
+//} else {
+//    System.out.println("Not Service Account");
+//}
+
+	
+System.out.println("tmpAcctElevated=" + tmpAcctElevated);
+
+//System.out.println(custom.toXml());
+
+return "Done"
+ ]]></Source>
+</Rule>

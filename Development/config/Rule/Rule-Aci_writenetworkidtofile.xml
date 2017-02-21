@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_writeNetworkIDToFile" type="Listener">
+  <Description>When the attribute changes at the source or the identity has the incorrect value, the rule will create a file to update Fusion HCM.
+
+Executed on Refresh and Aggregation.
+----
+This rule can be used when the ObjectAttribute being listened to has changed.</Description>
+  <Signature returnType="void"/>
+  <Source><![CDATA[/*
+        Rule:  aci_writeNetworkIDToFile
+        Author:  Steve Nuffer
+	
+	
+	Version: .1000
+
+*/
+import org.apache.log4j.Logger; 
+import sailpoint.object.*;
+import org.apache.jmeter.services.FileServer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+Logger logger = Logger.getLogger("com.aci.rule.aci_writeAttributeToFile");
+
+logger.debug("(" + identity.getDisplayName() + ") old=" + oldValue + " new=" + newValue);
+
+DateFormat dateFileFormat = new SimpleDateFormat("yyyyMMdd.HHmmss.S");
+DateFormat dateEffectiveFormat = new SimpleDateFormat("yyyy/MM/dd");
+Date currentDate = new Date();
+String csvFileName = %%SHARE_BASE%%"mft\\inbound\\network." + dateFileFormat.format(currentDate) + ".txt"; //TOKEN
+
+// Create the File handle
+File csvFile = new File(csvFileName);
+try
+{    
+    fileWriter = new PrintWriter( new FileOutputStream( csvFile ));
+}
+catch ( Exception e )
+{
+    // User doesn't have permission to write  
+    ; logger.debug("error on fileWriter");    
+}
+String identitytName  = identity.getDisplayName();
+String idendityPersonID = identity.getStringAttribute("personId");
+String identitypersonIndex = "300000099999999";
+
+fileWriter.println("COMMENT Business Entity : Person [" + identitytName + "]");
+fileWriter.println("METADATA|Worker|PersonNumber|FLEX:PER_PERSONS_DFF|networkId(PER_PERSONS_DFF=Global Data Elements)|PersonId|EffectiveStartDate|EffectiveEndDate");
+fileWriter.println("MERGE|Worker|" + idendityPersonID + "|Global Data Elements|" + newValue + "|" + identitypersonIndex + "|" + dateEffectiveFormat.format(currentDate) + "|4712/12/31");
+                
+// Close File handles
+fileWriter.flush();
+fileWriter.close();]]></Source>
+</Rule>

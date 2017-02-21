@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_PrepareHCMFile">
+  <Description>This rule can be executed in the console or in debug mode to return information </Description>
+  <Signature returnType="String">
+    <Inputs>
+      <Argument name="ruleConfig">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="attributeValue">
+        <Description>
+          The value of the attribute that should be populated.
+          The rule should return this value.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[
+/*
+    Rule:  aci_PrepareHCMFile
+    Author:  Steve Nuffer
+		
+	Version: 1.2
+
+*/
+
+import org.apache.log4j.Logger; 
+import sailpoint.object.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import sailpoint.tools.Util;
+import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.io.IOException;
+
+// Declare a logger class
+Logger logger = Logger.getLogger("com.aci.rule.aci_PrepareHCMFile");
+
+//Destination file
+DateFormat dateFileFormat = new SimpleDateFormat("yyyyMMdd.HH.mm.ss");
+Date currentDate = new Date();
+String destFileName = "%%SHARE_BASE%%mft\\outbound\\Sailpoint_To_HCM" + dateFileFormat.format(currentDate) + ".txt";
+String sourceDir = "%%SHARE_BASE%%mft\\outbound\\";
+String importFile = null;
+
+logger.debug("Computer: " + InetAddress.getLocalHost().getHostName() + "  User: " + System.getProperty("user.name"));
+
+// Source Directory
+//    Get a list of file names from a directory
+File directory = new File(sourceDir);
+String[] lstFileNames = directory.list();
+
+// Are there any files in the directory?
+if (lstFileNames.length == 0) {
+    logger.debug("The directory is empty");
+} else {
+
+    //Sort the list of files
+    Arrays.sort(lstFileNames, Collections.reverseOrder());
+
+    int i = 0;
+
+    while ( lstFileNames.length > i )
+    {
+        if ( lstFileNames[i].toLowerCase().contains("hcm_to_sailpoint")) {
+            if ( Util.isNotNullOrEmpty(importFile)) {
+                // Import file found, move others
+                logger.debug("Move file: " + lstFileNames[i]);
+                
+                File sourceFile = new File(sourceDir + lstFileNames[i]);
+                File targetDir = new File(sourceDir + "archive\\");                 
+                
+                // Move the file
+                try {
+                    FileUtils.moveFileToDirectory(sourceFile, targetDir, true);
+                } catch (IOException e) {
+                    logger.debug(e);
+                }
+            }
+            else {
+                // Copy file
+                importFile = lstFileNames[i];   
+                logger.debug("File to import: " + importFile);
+               
+                File sourceFile = new File(sourceDir + importFile);
+                File targetFile = new File(sourceDir + "fusion_current.txt");
+                File targetDir = new File(sourceDir + "archive\\");      
+                
+                try {    
+                    FileUtils.deleteQuietly(targetFile);
+                    FileUtils.copyFile(sourceFile, targetFile);
+                    FileUtils.moveFileToDirectory(sourceFile, targetDir, true);
+                } catch(Exception e) {
+                    logger.debug(e);
+                }                
+            }
+        }
+        i++;
+    }
+}
+
+if ( Util.isNotNullOrEmpty(importFile))  {
+    logger.info("Import file = " + importFile); 
+    return importFile;
+}
+else {
+    logger.info("No HCM file found for import"); 
+    return "No file to import";
+}
+
+]]></Source>
+</Rule>

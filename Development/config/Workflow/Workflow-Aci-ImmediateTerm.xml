@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="ACI - Immediate TERM">
+  <Variable initializer="ref:requestingIdentity" input="true" name="launcher"/>
+  <Variable initializer="script:return new ArrayList();" name="identityNames"/>
+  <Variable initializer="script:return 1;" name="incrementor"/>
+  <Description>Adds an audit event to the identity and calls the "ACI - Fusion Leaver" workflow.</Description>
+  <Step icon="Start" name="Start" posX="188" posY="17">
+    <Transition to="Get Identities"/>
+  </Step>
+  <Step catches="complete" icon="Default" name="Catch WF Errors" posX="205" posY="255">
+    <Script>
+      <Source><![CDATA[
+import java.util.ArrayList;
+import java.util.Iterator;
+import sailpoint.tools.Message;
+import org.apache.log4j.Logger;
+
+Logger logger = Logger.getLogger("com.aci.quicklink");
+
+//logger.debug("wfcase = " + wfcase.toXml());
+ 
+ArrayList messages = wfcase.getMessages();
+ 
+if (messages != null) {
+    logger.debug("***** WORKFLOW ERRORS *****");     
+    Iterator iter = messages.iterator();  
+    while (iter.hasNext()) {
+        Message next = (Message) iter.next();
+        logger.debug("Message = " + next.toString());
+    }
+} else {
+    logger.debug("    No workflow errors");
+}
+ 
+      ]]></Source>
+    </Script>
+  </Step>
+  <Step icon="Stop" name="Stop" posX="621" posY="211"/>
+  <Step icon="Default" name="Get Identities" posX="306" posY="17">
+    <Script>
+      <Source><![CDATA[
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import sailpoint.api.*;
+import sailpoint.tools.Util;        
+              
+Logger logger = Logger.getLogger("com.aci.quicklink");
+logger.debug("STEP - Get Identities");
+        
+//ArrayList<String> identityNames = new ArrayList<String>();
+        
+for(int count=0; count < quickLinkIdentityIds.size(); count++) {
+	  Identity aUser = context.getObjectById(Identity.class, (String)quickLinkIdentityIds.get(count));
+  	logger.debug("    User (" + count + "): " + aUser);
+  	logger.debug("    User (" + count + "): " + aUser.getName());
+  	identityNames.add(aUser.getName());
+}           
+
+logger.debug("    " + identityNames);
+        
+workflow.put("identityNames", identityNames);        
+      
+      ]]></Source>
+    </Script>
+    <Transition to="Get Individual"/>
+  </Step>
+  <Step icon="Default" name="Get Individual" posX="402" posY="17">
+    <Script>
+      <Source><![CDATA[import org.apache.log4j.Logger;
+
+Logger  logger = Logger.getLogger("com.aci.quicklink");
+logger.debug("STEP - Get Individual");
+
+identityName =(String)identityNames.get(incrementor - 1);
+incrementor = incrementor + 1;
+
+workflow.put("identityName", identityName);
+workflow.put("incrementor", incrementor);
+
+logger.debug("    incrementor:  " + incrementor);
+logger.debug("    identityName:  "+ identityName);
+  ]]></Source>
+    </Script>
+    <Transition to="Audit"/>
+  </Step>
+  <Step icon="Audit" name="Audit" posX="403" posY="120">
+    <Script>
+      <Source><![CDATA[
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import sailpoint.api.*;
+import sailpoint.tools.Util;
+
+Logger  logger = Logger.getLogger("com.aci.quicklink");
+logger.debug("STEP - Audit");
+
+AuditEvent auditEvent = new AuditEvent();
+
+auditEvent.setSource("Communication");
+auditEvent.setTarget(identityName);
+auditEvent.setAction("identityLifecycleEvent");
+auditEvent.setString1("Immediate TERM");
+auditEvent.setString2("HR requested and workflow launched by ");
+auditEvent.setString3(launcher);
+auditEvent.setString4("HR notification");
+
+context.saveObject(auditEvent);
+context.commitTransaction();
+]]></Source>
+    </Script>
+    <Transition to="Schedule Termination"/>
+  </Step>
+  <Step icon="Task" name="Schedule Termination" posX="403" posY="214">
+    <Arg name="owner" value="ref:launcher"/>
+    <Arg name="workflow" value="ACI - Fusion Leaver"/>
+    <Replicator arg="individual" items="identityNames"/>
+    <Script>
+      <Source><![CDATA[import org.apache.log4j.Logger;
+
+Logger logger = Logger.getLogger("com.aci.quicklink");
+
+logger.debug("STEP - Schedule Termination");
+logger.debug("    incrementor:  " + incrementor);
+logger.debug("    identityName:  "+ identityName);
+logger.debug("    individual:  "+ individual);
+
+import java.util.HashMap;
+import sailpoint.api.sailpointContext;
+import sailpoint.api.Workflower;
+import sailpoint.integration.ProvisioningPlan;
+import sailpoint.integration.ProvisioningPlan.AccountRequest;
+import sailpoint.integration.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.Identity;
+import sailpoint.object.Workflow;
+import sailpoint.object.WorkflowLaunch;
+import sailpoint.tools.GeneralException;
+import sailpoint.tools.xml.XMLObjectFactory;
+import org.apache.log4j.Logger;
+
+Logger logger = Logger.getLogger("com.aci.quicklink");
+
+HashMap launchArgsMap = new HashMap();
+
+//Add needed Workflow Launch Variables to map of name/value pairs
+launchArgsMap.put("identityName",identityName);
+
+launchArgsMap.put("identityRequestId","");
+launchArgsMap.put("launcher","admin");
+launchArgsMap.put("workItemComments","");
+
+// Remove Late submission audit and email
+launchArgsMap.put("auditEvent","false");
+launchArgsMap.put("notifyMgrLateNotice","false");
+
+//Create WorkflowLaunch and set values
+WorkflowLaunch wflaunch = new WorkflowLaunch();
+Workflow wf = (Workflow) context.getObjectByName(Workflow.class,"ACI - Fusion Leaver");
+wflaunch.setWorkflowName(wf.getName());
+wflaunch.setWorkflowRef(wf.getName());
+wflaunch.setCaseName("Immediate TERM: " + identityName);
+wflaunch.setVariables(launchArgsMap);
+
+
+//Create Workflower and launch workflow from WorkflowLaunch
+Workflower workflower = new Workflower(context);
+WorkflowLaunch launch = workflower.launch(wflaunch);
+
+// print workflowcase ID (example only; might not want to do this in the task)
+String workFlowId = launch.getWorkflowCase().getId();
+logger.debug("    workFlowId: " + workFlowId);]]></Source>
+    </Script>
+    <Transition to="Next Identity" when="incrementor &lt;= identityNames.size();"/>
+    <Transition to="Stop"/>
+  </Step>
+  <Step icon="Default" name="Next Identity" posX="507" posY="20">
+    <Transition to="Get Individual"/>
+  </Step>
+</Workflow>

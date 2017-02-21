@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="ACI - RemedyForce Joiner Email">
+  <Body>
+  &lt;html&gt;
+&lt;h2&gt;$personType starting on $startDate&lt;/h2&gt;
+&lt;pre&gt;
+&lt;h3&gt;-----  $personType Information  -----&lt;/h3&gt;
+     Last Name:   $lastname
+     First Name:  $firstname
+
+     Start Date:  $startDate
+#if ( $personType == "Contingent Worker" ) 
+#if ( $endDate )
+     End Date:    $endDate
+#else
+     End Date:    &lt;font color="red"&gt;Need End Date&lt;/font&gt;
+#end
+#end
+     
+#if ($employeeTitle) 
+     Title:       $employeeTitle
+#else
+     Title:       None
+#end
+#if ($personType) 
+     Person Type: $personType
+#else
+     Person Type: None
+#end    
+#if ($company) 
+     Company:     $company
+#else
+     Company:     None
+#end        
+#if ($division) 
+     Division:    $division
+#else
+     Division:    None
+#end    
+#if ($department) 
+     Department:  $department
+#else
+     Department:  None
+#end
+
+
+#if ($department) 
+     Country:     $country
+#else
+     Country:     None
+#end
+#if ($location) 
+     Location:    $location
+#else
+     Location:    None
+#end
+#if ($address) 
+     Address:     $address
+#else
+     Address:     None
+#end
+#if ($city) 
+     City:        $city
+#else
+     City:        None
+#end    
+#if ($city) 
+     Region:      $region
+#else
+     Region:      None
+#end
+#if ($postalCode) 
+     Postal code: $postalCode
+#else
+     Postal code: None
+#end
+    
+    
+#if ($managerName) 
+     Manager:        $managerName
+     Manager Email:  $managerEmail
+#else
+     Manager:        None
+     Manager Email:  None
+#end
+    
+          
+&lt;h3&gt;-----  Account Information  -----&lt;/h3&gt;
+     Network ID:  $networkId
+     Email:       $employeeEmail
+&lt;br&gt;
+&lt;br&gt;
+&lt;B&gt;Statement of Confidentiality: &lt;/B&gt;
+This e-mail message and any attachments may contain confidential, proprietary or on-public information. This information is intended solely for the designated recipient(s). If an addressing or transmission error has misdirected this e-mail, please notify the sender immediately and destroy this e-mail. Any review, dissemination, use or reliance upon this information by unintended recipients is prohibited.     
+&lt;/pre&gt;     
+&lt;html&gt;
+ </Body>
+  <Description>
+	Email Template for Network ID. 
+  </Description>
+  <Signature>
+    <Inputs>
+      <Argument name="firstname" type="string">
+        <Description>Identity</Description>
+      </Argument>
+      <Argument name="lastname" type="string">
+        <Description>Identity</Description>
+      </Argument>
+      <Argument name="networkId" type="string">
+        <Description>Network Id </Description>
+      </Argument>
+      <Argument name="email" type="string">
+        <Description>Employee email </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Subject>
+     New Hire - $lastname, $firstname $startDate
+  </Subject>
+</EmailTemplate>
