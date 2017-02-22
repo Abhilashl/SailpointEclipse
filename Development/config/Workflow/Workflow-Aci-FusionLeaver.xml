@@ -242,6 +242,13 @@
   <Variable initializer="string:true" name="auditEvent">
     <Description>If true, add an audit event.</Description>
   </Variable>
+  <Variable initializer="script:return 0;" name="numOfDaysSubmission">
+    <Description>Number of days the notification to Sailpoint versus the actual TERM date.
+
+&amp;gt;0  Days in advance
+=0 Same day
+&amp;lt;0 Late submission</Description>
+  </Variable>  
   <Description>This workflow will perform each of these steps.
 Disable all accounts in the identity.
 Notify IRS if applicable
@@ -455,10 +462,7 @@ if ( null != linkLists ) {
                 applist.add(map);  
                 break;
             } // switch
-		
-		// Set incase not an authoratative Identity with link Fusion
-		workflow.put("numOfDaysSubmission", 0);
-            
+		           
         // Is application Authoritative?
         if ( isAppAuth) {
             link.setAttribute("IIQDisabled", "true");
