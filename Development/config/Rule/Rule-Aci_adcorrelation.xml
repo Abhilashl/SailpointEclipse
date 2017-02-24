@@ -65,15 +65,14 @@ A correlation rule must return a Map with one of the specified Return arguments.
       </Argument>
     </Returns>
   </Signature>
-  <Source><![CDATA[
-
-/*
-    Rule:  aci_ADCorrelation
-    
+  <Source><![CDATA[/*   
+    Rule:    aci_ADCorrelation
+    Author:  Steve Nuffer
+       
     Author:  Steve Nuffer
 	
-	Date:  January 24, 2016
-    Version:
+    Date:  February 23, 2017
+    Version:  1.1
 
 */
 import org.apache.log4j.Logger;
@@ -81,84 +80,32 @@ import sailpoint.object.*;
 import sailpoint.api.*;
 import sailpoint.tools.Util;
 
-// Declare a logger class
-Logger logger = Logger.getLogger("com.aci.rule.aci_ADCorrelation");
-//logger.debug("com.aci.rule.aci_ADCorrelation - START");
+Logger  logger = Logger.getLogger("com.aci.rule.aci_ADCorrelation");
 
-// Setup Variables
-String appName = link.getApplicationName();
-String acctSamAccountName = account.getStringAttribute("sAMAccountName");
-String appConnectorType = application.getConnector() ;
-Identity identity = link.getIdentity();
-String identitytName  = identity.getDisplayName();
-List appAccounts = identity.getLinks(application);
-Boolean authIdentity = identity.isCorrelated();
-String idendityPersonID = identity.getStringAttribute("personId");
-String acctPrincipalName = account.getStringAttribute("msDS-PrincipalName");
-String acctMail= account.getStringAttribute("mail");
+Map returnMap = new HashMap();
 
-// Default value for AccountType
-String tmpAcctType = "not set";
+String acctFname = account.getStringAttribute("givenName");
+String acctLname = account.getStringAttribute("sn");
+String acctDisplayName = account.getStringAttribute("displayName");
+String acctAccount = link.getNativeIdentity();
 
-// Based upon the number of accounts do:
-switch ( appAccounts.size() ) {
-    // Only one application account in the same application
-    case 1:
-        if ( authIdentity ) {
-		    // If only one account for an authoritative identity, it's Personal
-         	tmpAcctType="Personal";
-			//logger.debug("A-personal," + identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType + "," + idendityPersonID);
-        } else {
-		    // Can be of any other type (generic, service, system, or Elevated)
-			tmpAcctType = "Orphan";
-            //logger.debug("B-orphan," + identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType+ "," + idendityPersonID);
-        }
-        break;
-    default:
-	// More then two application accounts in the same application
-        if ( authIdentity ) {
-			//Does the application account have mail then it's a personal account
-			if ( acctMail != null && !acctMail.isEmpty()) {
-			    // The account has a mail address defined
-				//Does the mail account have the actual samAccountName defined in it?
-				if ( !acctMail.toLowerCase().contains(acctSamAccountName.toLowerCase()) ) {
-				    // The samAccountName is not found in the mail, it's Personal
-			        tmpAcctType="Personal";	    
-				    //logger.debug("C-personal," + identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType + "," + idendityPersonID);
-				}
-            }
-        }
-        // Can be of any other type (generic, service, system, or Elevated)         		
-        break;
+if ( ( acctFname != null ) && ( acctLname != null ) ) {
+	// Use givenName and sn from AD
+    String identityName= acctFname + "." + acctLname + "@aciworldwide.com";
+    returnMap.put("identityName", identityName);
+  	logger.debug("1: (" +acctAccount + ")"+ returnMap);
+} else {
+	// Use displayName fname lname
+	if ( acctDisplayName != null ) {
+		// Display Name has a Value
+		String[] splitString = acctDisplayName.toLowerCase().split(" ");
+		if (splitString.length > 1) {
+			// Has two Words
+			returnMap.put("identityName", splitString[0].toLowerCase() + "." + splitString[1].toLowerCase() + "@aciworldwide.com");
+			logger.debug("2: (" +acctAccount + ")"+ returnMap);
+		}
+	}
 }
-logger.debug(identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType + "," + idendityPersonID);
-/*
-// Set the accountType if properly defined
-switch ( tmpAcctType ) {
-    case "PersonalA":
-	case "Generic":
-	case "Service":
-	case "System":
-	case "Elevated":
-	    //Set the account type attribute
-	    //link.setAttribute("accountType", tmpAcctType);
-		//logger.debug("AccountType is defined," + identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType);
-		;
-        break;
-	default:
-	// Account type is not defined
-	//if ( logger.isDebugEnabled() ) {
-	    //account.setAttribute("accountType", "notset");
-        //logger.debug("AccountType not defined," + identitytName + "," + appName + "," + acctSamAccountName + "," + acctMail + "," + tmpAcctType);
-	//}
-	;
-	break;
-}
-*/
 
-// the correlation attribute specification and the simple attribute match will only be attempted if the rule does not return an Identity.
-//Map returnMap = new HashMap();
-//return returnMap;
-
-]]></Source>
+return returnMap;]]></Source>
 </Rule>
