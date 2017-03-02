@@ -524,11 +524,11 @@ if ("IRS Certified".equalsIgnoreCase(identityIRSStatus) || "IRS Prep".equalsIgno
     // Notify ACI IRS - Have or preparing for IRS Access
     workflow.put("irsStatus", identityIRSStatus);
     workflow.put("irsCertDate", identityIRSCertDate);
-    workflow.put("notifyIRSContact", "true");
+    workflow.put("irsAccess", "true");
 } else {
 
     // No IRS affiliation
-    workflow.put("notifyIRSContact", "false");
+    workflow.put("irsAccess", "false");
 }
 logger.debug("numOfDaysSubmission=" + numOfDaysSubmission);
 return plan;]]></Source>
@@ -675,7 +675,7 @@ context.sendEmailNotification(et, options);
       ]]></Source>
     </Script>
   </Step>
-  <Step action="call:sendEmail" condition="notifyIRSContact.equalsIgnoreCase(&quot;true&quot;)" configForm="Provisioning Notification Step Form" icon="Email" name="Notify ACI IRS Contacts" posX="345" posY="171">
+  <Step action="call:sendEmail" condition="notifyIRSContact.equalsIgnoreCase(&quot;true&quot;) &amp;&amp; irsAccess.equalsIgnoreCase(&quot;true&quot;)" configForm="Provisioning Notification Step Form" icon="Email" name="Notify ACI IRS Contacts" posX="345" posY="171">
     <Arg name="cc" value="mbox-idm-prd@aciworldwide.com,jenny.powers@aciworldwide.com"/>
     <Arg name="template" value="ACI - IRS Term Email"/>
     <Arg name="to" value="mbox-aci-irs-comms@aciworldwide.com,natalie.boston@irs.gov"/>
