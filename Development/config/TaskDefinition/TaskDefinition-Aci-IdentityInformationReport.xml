@@ -11,8 +11,8 @@
                 <Parameter argument="identity" property="id"/>
                 <Parameter argument="manager" property="manager.id"/>
                 <Parameter argument="identityApplication" property="links.application.id"/>
-                <Parameter argument="inactive" property="inactive"/>
                 <Parameter argument="identityType" property="identityType"/>
+                <Parameter argument="inactive" property="inactive"/>
                 <Parameter argument="irsStatus" property="irsStatus"/>
                 <Parameter argument="company" property="company"/>
                 <Parameter argument="personType" property="personType"/>
