@@ -135,7 +135,7 @@ logger.debug("Firstname: " + firstname + " Lastname: " + lastname + "  Email: " 
       <Script>
         <Source><![CDATA[// Add Vendor Mgmt for contingents only
 
-String sendCc = "mbox-idm-prd@aciworldwide.com,jenny.powers@aciworldwide.com,julie.moritz@aciworldwide.com";
+String sendCc = "mbox-idm-prd@aciworldwide.com";
 
 if ( personType.toLowerCase().contains("contingent") ) 
     sendCc = sendCc +",mbox-vm-contractors@aciworldwide.com";
@@ -159,7 +159,7 @@ return sendCc;
     <Arg name="knownas" value="ref:knownas"/>
     <Arg name="networkId" value="ref:networkId"/>
     <Arg name="location" value="ref:location"/>
-    <Arg name="to" value="steve.nuffer@aciworldwide.com"/>
+    <Arg name="to" value="mbox-aci-desk@aciworldwide.com"/>
     <Arg name="region" value="ref:region"/>
     <Arg name="department" value="ref:department"/>
     <Arg name="personType" value="ref:personType"/>

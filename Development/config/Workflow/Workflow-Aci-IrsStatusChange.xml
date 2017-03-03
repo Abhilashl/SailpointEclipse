@@ -91,7 +91,7 @@
   </Step>
   <Step action="call:sendEmail" icon="Email" name="Email ACI IRS contacts" posX="285" posY="132">
     <Arg name="template" value="ACI - IRS Status Change Email"/>
-    <Arg name="cc" value="mbox-idm-prd@aciworldwide.com,jenny.powers@aciworldwide.com"/>
+    <Arg name="cc" value="mbox-idm-prd@aciworldwide.com"/>
     <Arg name="to" value="string:mbox-aci-irs-comms@aciworldwide.com"/>
     <Description>Generate an email to ACI's IRS communications mailbox</Description>
     <Transition to="end"/>

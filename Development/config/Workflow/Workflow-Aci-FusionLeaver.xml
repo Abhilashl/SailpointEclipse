@@ -595,7 +595,7 @@ EmailOptions options = new EmailOptions();
 EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "ACI - Leaver Mgr Account");
 
 // Add Vendor Mgmt for contingents only
-String sendCc = "mbox-idm-prd@aciworldwide.com,jenny.powers@aciworldwide.com,julie.moritz@aciworldwide.com";
+String sendCc = "mbox-idm-prd@aciworldwide.com";
 
 if ( personType.toLowerCase().contains("contingent") ) 
     sendCc = managerEmail +",mbox-vm-contractors@aciworldwide.com";
