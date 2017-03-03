@@ -91,7 +91,7 @@
   </Step>
   <Step action="call:sendEmail" icon="Email" name="Generate RemedyForce Ticket" posX="413" posY="132">
     <Arg name="template" value="ACI - RemedyForce ECN Change Email"/>
-    <Arg name="cc" value="jenny.powers@aciworldwide.com,julie.moritz@aciworldwide.com,trish.rolf@aciworldwide.com"/>
+    <Arg name="cc" value="jenny.powers@aciworldwide.com,julie.moritz@aciworldwide.com,trish.rolf@aciworldwide.com,joseph.mccann@aciworldwide.com"/>
     <Arg name="to" value="string:mbox-aci-desk@aciworldwide.com,mbox-idm-prd@aciworldwide.com"/>
     <Transition to="end"/>
   </Step>
@@ -247,7 +247,7 @@ if ("IRS Certified".equalsIgnoreCase(irsStatus) || "IRS Preparation".equalsIgnor
     <Transition to="Generate RemedyForce Ticket"/>
   </Step>
   <Step action="call:sendEmail" configForm="Provisioning Notification Step Form" icon="Email" name="Email ACI IRS Contacts" posX="345" posY="29">
-    <Arg name="cc" value="mbox-idm-prd@aciworldwide.com,jenny.powers@aciworldwide.com"/>
+    <Arg name="cc" value="mbox-idm-prd@aciworldwide.com"/>
     <Arg name="template" value="ACI - RemedyForce ECN Change Email"/>
     <Arg name="subject" value="script:return &quot;IRS Certified Update - &quot; +lastname + &quot;, &quot; + firstname;"/>
     <Arg name="to" value="mbox-aci-irs-comms@aciworldwide.com"/>
