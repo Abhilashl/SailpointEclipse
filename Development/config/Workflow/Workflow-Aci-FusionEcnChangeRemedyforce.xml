@@ -91,7 +91,7 @@
   </Step>
   <Step action="call:sendEmail" icon="Email" name="Generate RemedyForce Ticket" posX="413" posY="132">
     <Arg name="template" value="ACI - RemedyForce ECN Change Email"/>
-    <Arg name="cc" value="jenny.powers@aciworldwide.com,julie.moritz@aciworldwide.com,trish.rolf@aciworldwide.com,joseph.mccann@aciworldwide.com"/>
+    <Arg name="cc" value="mbox-aci-oracle-operations-hcm-support@aciworldwide.com"/>
     <Arg name="to" value="string:mbox-aci-desk@aciworldwide.com,mbox-idm-prd@aciworldwide.com"/>
     <Transition to="end"/>
   </Step>
