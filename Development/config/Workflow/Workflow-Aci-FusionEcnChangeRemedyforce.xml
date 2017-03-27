@@ -102,8 +102,8 @@
     Workflow:  ACI - Fusion ECN Change RemedyForce
     Step:  Update Fields
     
-    Date:  December 6, 2016
-    Version:  1.2
+    Date:  March 27, 2017
+    Version:  1.21
 */
 import org.apache.log4j.Logger;
 import sailpoint.object.*;
