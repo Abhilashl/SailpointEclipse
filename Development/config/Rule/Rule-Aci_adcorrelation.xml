@@ -65,7 +65,8 @@ A correlation rule must return a Map with one of the specified Return arguments.
       </Argument>
     </Returns>
   </Signature>
-  <Source><![CDATA[/*   
+  <Source><![CDATA[
+/*   
     Rule:    aci_ADCorrelation
     Author:  Steve Nuffer
        
@@ -75,10 +76,13 @@ A correlation rule must return a Map with one of the specified Return arguments.
     Version:  1.1
 
 */
+
 import org.apache.log4j.Logger;
 import sailpoint.object.*;
 import sailpoint.api.*;
 import sailpoint.tools.Util;
+import java.util.HashMap;
+import java.util.Map;
 
 Logger  logger = Logger.getLogger("com.aci.rule.aci_ADCorrelation");
 
@@ -86,26 +90,55 @@ Map returnMap = new HashMap();
 
 String acctFname = account.getStringAttribute("givenName");
 String acctLname = account.getStringAttribute("sn");
-String acctDisplayName = account.getStringAttribute("displayName");
 String acctAccount = link.getNativeIdentity();
+String identityName = "";
+int countRows = 0;
 
+logger.debug("acctAccount=" + acctAccount);
+
+// Have values    
 if ( ( acctFname != null ) && ( acctLname != null ) ) {
-	// Use givenName and sn from AD
-    String identityName= acctFname + "." + acctLname + "@aciworldwide.com";
-    returnMap.put("identityName", identityName);
-  	logger.debug("1: (" +acctAccount + ")"+ returnMap);
-} else {
-	// Use displayName fname lname
-	if ( acctDisplayName != null ) {
-		// Display Name has a Value
-		String[] splitString = acctDisplayName.toLowerCase().split(" ");
-		if (splitString.length > 1) {
-			// Has two Words
-			returnMap.put("identityName", splitString[0].toLowerCase() + "." + splitString[1].toLowerCase() + "@aciworldwide.com");
-			logger.debug("2: (" +acctAccount + ")"+ returnMap);
-		}
-	}
-}
+    //First and last name have values
+    logger.debug("    firstName=" + acctFname + "  lastName=" + acctLname);    
 
-return returnMap;]]></Source>
+	// Find an existing Identity by first and last name
+	// 
+	QueryOptions qo = new QueryOptions();
+	qo.addFilter(Filter.eq("firstname", acctFname));
+	qo.addFilter(Filter.eq("lastname", acctLname));
+	
+	Iterator rows = context.search(Identity.class, qo,Util.asList("name"));
+	
+	if (null != rows) {
+	    // Found an existing identity
+	    while (rows.hasNext()) {
+	        countRows++;
+	        identityName = (String) rows.next()[0];
+	        logger.debug("    (" + countRows + ")Existing: identityName=" + identityName );
+	    }
+	}
+	
+	sailpoint.tools.Util.flushIterator(rows);        
+} else {
+    // No Values to search on
+    logger.debug("    No first or last name");
+} 
+
+// If only one identity, then match
+switch (countRows) {
+        case 0:
+            logger.debug("    No identity matches");
+            break;
+        case 1:
+            logger.debug("    Single Identity match");
+            returnMap.put("identityName", identityName);
+            break;
+        default:
+            logger.debug("    Too many possibilities.  countRows=" + countRows);            
+            break;
+}
+logger.debug("    returnMap=" + returnMap);
+
+return returnMap;
+]]></Source>
 </Rule>
