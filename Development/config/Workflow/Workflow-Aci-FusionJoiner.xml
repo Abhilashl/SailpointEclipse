@@ -251,7 +251,16 @@ switch (identityPerType.toLowerCase()) {
 
         webexReq.add(new AttributeRequest("LastName",ProvisioningPlan.Operation.Add,identityLname));
         webexReq.add(new AttributeRequest("FirstName",ProvisioningPlan.Operation.Add,identityFname));
-
+        
+        // Set Webex Values
+        webexReq.add(new AttributeRequest("TeleConferenceCallInInternational",ProvisioningPlan.Operation.Add,"true"));
+        webexReq.add(new AttributeRequest("TelephoneConferenceCallIn",ProvisioningPlan.Operation.Add,"true"));
+        webexReq.add(new AttributeRequest("TelephoneConferenceCallOut",ProvisioningPlan.Operation.Add,"true"));
+        webexReq.add(new AttributeRequest("TelephoneConferenceCallOutInternational",ProvisioningPlan.Operation.Add,"true"));
+        webexReq.add(new AttributeRequest("TelephoneConferenceTollFreeCallIn",ProvisioningPlan.Operation.Add,"true"));
+        webexReq.add(new AttributeRequest("OtherTeleConferencing",ProvisioningPlan.Operation.Add,"true"));
+        webexReq.add(new AttributeRequest("VOIP",ProvisioningPlan.Operation.Add,"true"));
+        
         // Generate password
         //
         logger.debug("\tGenerate password");       
