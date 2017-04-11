@@ -22,6 +22,9 @@
   <Variable name="firstname"/>
   <Variable name="lastname"/>
   <Variable name="middlename"/>
+  <Variable initializer="true" name="notifyRemedyForce">
+    <Description>if true, create an incident ticket for the new individual.</Description>
+  </Variable>
   <Description>Send email to RemedyForce to create employee or contingent rehire ticket</Description>
   <Step icon="Start" name="Start" posX="120" posY="91">
     <Transition to="Update Fields"/>
@@ -128,7 +131,7 @@ logger.debug("Firstname: " + firstname + " Lastname: " + lastname + "  Email: " 
     </Script>
     <Transition to="Generate RemedyForce Ticket"/>
   </Step>
-  <Step action="call:sendEmail" configForm="Provisioning Notification Step Form" icon="Email" name="Generate RemedyForce Ticket" posX="441" posY="90">
+  <Step action="call:sendEmail" condition="notifyRemedyForce.equalsIgnoreCase(&quot;true&quot;)" configForm="Provisioning Notification Step Form" icon="Email" name="Generate RemedyForce Ticket" posX="441" posY="90">
     <Arg name="template" value="ACI - RemedyForce Joiner Email"/>
     <Arg name="cc">
       <Script>

@@ -70,6 +70,9 @@
        object.</Description>
   </Variable>
   <Variable initializer="ref:here" input="true" name="here"/>
+  <Variable initializer="true" name="notifyRemedyForce">
+    <Description>if true, create an incident ticket for the new individual.</Description>
+  </Variable>
   <Description>Send email to RemedyForce to create an ECN Change ticket.</Description>
   <RuleLibraries>
     <Reference class="sailpoint.object.Rule" name="Approval Library"/>
@@ -89,7 +92,7 @@
     </Script>
     <Transition to="Update Fields"/>
   </Step>
-  <Step action="call:sendEmail" icon="Email" name="Generate RemedyForce Ticket" posX="413" posY="132">
+  <Step action="call:sendEmail" condition="notifyRemedyForce.equalsIgnoreCase(&quot;true&quot;)" icon="Email" name="Generate RemedyForce Ticket" posX="413" posY="132">
     <Arg name="template" value="ACI - RemedyForce ECN Change Email"/>
     <Arg name="cc" value="mbox-aci-oracle-operations-hcm-support@aciworldwide.com"/>
     <Arg name="to" value="string:mbox-aci-desk@aciworldwide.com,mbox-idm-prd@aciworldwide.com"/>
