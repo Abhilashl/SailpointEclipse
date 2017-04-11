@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_RACFCorrelation" type="Correlation">
+  <Description>Identity Correlation Rules are used to find identities to which new accounts can be attached.
+
+A correlation rule must return a Map with one of the specified Return arguments.</Description>
+  <Signature returnType="Map">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="environment" type="Map">
+        <Description>
+          Arguments passed to the aggregation task.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application being aggregated.
+        </Description>
+      </Argument>
+      <Argument name="account">
+        <Description>
+          A sailpoint.object.ResourceObject returned from the
+          collector.
+        </Description>
+      </Argument>
+      <Argument name="link">
+        <Description>
+          Existing link to this account.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="identityName">
+        <Description>
+          The name of an Identity object.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+          A fully resolved Identity object if the rule wants
+          to do its own queries to locate the identity.
+        </Description>
+      </Argument>
+      <Argument name="identityAttributeName">
+        <Description>
+          The name of the extended attribute that can be used
+          to locate an existing identity.
+        </Description>
+      </Argument>
+      <Argument name="identityAttributeValue">
+        <Description>
+          The value of the named extended attribute that can be used
+          to locate an existing identity. This attribute is used
+          together with the identityAttributeName argument.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[/*   
+    Rule:    aci_RACFCorrelation
+    Author:  Steve Nuffer
+    
+    Date:  April 10, 2017
+    Version:  1.11
+
+*/
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import sailpoint.api.*;
+import sailpoint.tools.Util;
+import java.util.HashMap;
+import java.util.Map;
+
+Logger  logger = Logger.getLogger("com.aci.rule.aci_RACFCorrelation");
+logger.debug("com.aci.rule.aci_RACFCorrelation");
+
+Map returnMap = new HashMap();
+
+String acctName = account.getStringAttribute("NAME");
+String acctWorkAttr = account.getStringAttribute("WORKATTR.WANAME");
+
+String identityName = "";
+int countRows = 0;
+
+logger.debug("1. acctName=" + acctName);
+logger.debug("1. acctWorkAttr=" + acctWorkAttr);
+
+// Remove all non-alpha characters and make lowercase
+if ( Util.isNotNullOrEmpty(acctName) )
+    acctName = acctName.replaceAll("[^a-zA-Z ]", "").toLowerCase().trim();
+
+// Remove all non-alpha characters and make lowercase
+if ( Util.isNotNullOrEmpty(acctWorkAttr) ) {
+    acctWorkAttr = acctWorkAttr.replaceAll("\\.", " ").toLowerCase().trim();
+    acctWorkAttr = acctWorkAttr.replaceAll("[^a-zA-Z ]", "").toLowerCase().trim();
+}    
+
+logger.debug("2. acctName=" + acctName);
+logger.debug("2. acctWorkAttr=" + acctWorkAttr);
+
+String[] values = {acctName,acctWorkAttr};
+for (String value : values ){
+    countRows = 0;
+    logger.debug("   value=" + value);
+    
+    String firstName = "";
+    String lastName = "";    
+    
+    if ( value != null ) {
+        // Name has a Value
+        String[] splitValue = value.split(" ");
+        logger.debug("    splitValue.length=" + splitValue.length);    
+    
+        switch (splitValue.length) {
+            case 2:
+                firstName = splitValue[0];
+                lastName = splitValue[1];
+                break;
+            case 3:
+                firstName = splitValue[0];
+                lastName = splitValue[2];
+                break;  
+            default:
+                // No valid way to determine identity
+                logger.debug("    Not enough information to determine first and last name using " + value);
+        }  // switch
+        
+        // Does firstName and lastName have a value
+        if ( Util.isNotNullOrEmpty(firstName) ) {
+            logger.debug("    firstName=" + firstName + "  lastName=" + lastName);
+
+            // Find an existing Identity by first and last name
+            // 
+            QueryOptions qo = new QueryOptions();
+            qo.addFilter(Filter.eq("firstname", firstName));
+            qo.addFilter(Filter.eq("lastname", lastName));
+
+            Iterator rows = context.search(Identity.class, qo,Util.asList("name"));
+
+            if (null != rows) {
+                // Found an existing identity
+                while (rows.hasNext()) {
+                    countRows++;
+                    identityName = (String) rows.next()[0];
+                    logger.debug("    Existing: identityName=" + identityName );
+                }
+                // If only one identity, then match
+                switch (countRows) {
+                    case 0:
+                        logger.debug("    No identity matches");
+                        break;
+                    case 1:
+                        logger.debug("    Single Identity match");
+                        returnMap.put("identityName", identityName);
+                        break;
+                    default:
+                        logger.debug("    Too many possibilities.  countRows=" + countRows);            
+                        break;
+                } //switch
+            } // if
+            sailpoint.tools.Util.flushIterator(rows);
+        } // if 
+    } // if  
+}  //for
+
+logger.debug("    returnMap=" + returnMap);
+
+return returnMap;]]></Source>
+</Rule>
