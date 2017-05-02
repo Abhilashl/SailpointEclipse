@@ -53,7 +53,7 @@
     <Script>
       <Source><![CDATA[
 /*
-    Workflow:  ACI - Fusion Leaver RemedyForce
+    Workflow:  ACI - Fusion Leaver Reversal RemedyForce
     Step:  Update Fields
     
     Date:  August 4, 2016
@@ -138,34 +138,16 @@ logger.debug("Firstname: " + firstname + " Lastname: " + lastname + "  Email: " 
       <Script>
         <Source><![CDATA[// Add Vendor Mgmt for contingents only
 
-String sendCc = "mbox-idm-prd@aciworldwide.com";
+String sendCc = "";
 
 if ( personType.toLowerCase().contains("contingent") ) 
-    sendCc = sendCc +",mbox-vm-contractors@aciworldwide.com";
+    sendCc = "mbox-vm-contractors@aciworldwide.com";
 
 return sendCc;
 ]]></Source>
       </Script>
     </Arg>
-    <Arg name="country" value="ref:country"/>
-    <Arg name="firstname" value="ref:firstname"/>
-    <Arg name="address" value="ref:address"/>
-    <Arg name="city" value="ref:city"/>
-    <Arg name="endDate" value="ref:endDate"/>
-    <Arg name="postalCode" value="ref:postalCode"/>
-    <Arg name="employeeEmail" value="ref:employeeEmail"/>
-    <Arg name="managerName" value="ref:managerName"/>
-    <Arg name="lastname" value="ref:lastname"/>
-    <Arg name="division" value="ref:division"/>
-    <Arg name="managerEmail" value="ref:managerEmail"/>
-    <Arg name="employeeTitle" value="ref:employeeTitle"/>
-    <Arg name="knownas" value="ref:knownas"/>
-    <Arg name="networkId" value="ref:networkId"/>
-    <Arg name="location" value="ref:location"/>
-    <Arg name="to" value="mbox-aci-desk@aciworldwide.com"/>
-    <Arg name="region" value="ref:region"/>
-    <Arg name="department" value="ref:department"/>
-    <Arg name="personType" value="ref:personType"/>
+    <Arg name="to" value="mbox-aci-desk@aciworldwide.com,mbox-idm-prd@aciworldwide.com"/>
     <Description>Create a RemedyForce ticket</Description>
     <Transition to="Stop"/>
   </Step>
