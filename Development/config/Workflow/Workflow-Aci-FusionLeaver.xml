@@ -410,7 +410,26 @@ if ( null != linkLists ) {
                 map.put("account", acctName);
                 map.put("info", "Single Sign On (SSO)");
                 applist.add(map);  
-                break;                    
+                break;
+            //**************************************************************************
+            //*****  RACF - Full
+            case "sailpoint.connector.sm.SMConnector":
+            
+                AccountRequest acctReq = new AccountRequest();
+                acctReq.setNativeIdentity(acctName);
+                acctReq.setApplication(appName);
+                acctReq.setOperation(AccountRequest.Operation.Disable);
+                
+                // Set Application Attribute
+                acctReq.add(new AttributeRequest("DATA", ProvisioningPlan.Operation.Set, "IIQ Leaver:  "+dateFormatter.format(now) ));
+                
+                plan.add(acctReq); 
+
+                map.put("name", appName);
+                map.put("account", acctName);
+                map.put("info", "");
+                applist.add(map);  
+                break;                      
             //**************************************************************************
             //*****  Open Connector
             case "sailpoint.connector.OpenConnectorAdapter":
@@ -475,7 +494,7 @@ if ( null != linkLists ) {
                 
                     // Determine if late on term Notice
                     numOfDaysSubmission = numOfDays(termDate);
-                    if ( numOfDaysSubmission < -1  ) {
+                    if ( numOfDaysSubmission < 0  ) {
                         // Late
                         workflow.put("numOfDaysSubmission", -1 * numOfDaysSubmission);
                     } else {
