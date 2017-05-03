@@ -210,7 +210,6 @@
 
                   				Identity identityObj = context.getObjectByName(Identity.class,value);
                     
-								List returnObj = new ArrayList();  
                                 QueryOptions queryOptions = new QueryOptions(); 
                                 queryOptions.addFilter(Filter.eq("action", "identityLifecycleEvent"));  
                                 queryOptions.addFilter(Filter.eq("string1", "Fusion Joiner"));
@@ -237,7 +236,6 @@
 
                  				Identity identityObj = context.getObjectByName(Identity.class,value);
                     
-								List returnObj = new ArrayList();  
                                 QueryOptions queryOptions = new QueryOptions(); 
                                 queryOptions.addFilter(Filter.eq("action", "identityLifecycleEvent"));  
                                 queryOptions.addFilter(Filter.eq("string1", "Fusion Leaver"));
@@ -263,8 +261,7 @@
                                 import java.text.SimpleDateFormat;
 
              					Identity identityObj = context.getObjectByName(Identity.class,value);
-                    
-								List returnObj = new ArrayList();  
+                     
                                 QueryOptions queryOptions = new QueryOptions(); 
                                 queryOptions.addFilter(Filter.eq("action", "identityLifecycleEvent"));  
                                 queryOptions.addFilter(Filter.eq("string1", "Fusion Leaver RemedyForce"));
@@ -281,8 +278,7 @@
                   ]]></Source>
                 </RenderScript>
               </ReportColumnConfig>
-              
-               <ReportColumnConfig field="lateSubmission" header="Leaver Late Submission" hidden="true" property="name" width="110">
+              <ReportColumnConfig field="lateSubmission" header="Leaver Late Submission" hidden="true" property="name" width="110">
                 <RenderScript>
                   <Source><![CDATA[
                                 import sailpoint.object.*;
@@ -292,11 +288,10 @@
 
              					Identity identityObj = context.getObjectByName(Identity.class,value);
                     
-								List returnObj = new ArrayList();  
                                 QueryOptions queryOptions = new QueryOptions(); 
                                 queryOptions.addFilter(Filter.eq("action", "identityLifecycleEvent"));  
                                 queryOptions.addFilter(Filter.eq("string1", "Late Term Submission"));
-                                queryOptions.addFilter(Filter.eq("target", identityObj.name));
+                                queryOptions.addFilter(Filter.eq("target", "Identity:" + identityObj.name));
                					queryOptions.addOrdering("created",false);
                                 
                                 DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
@@ -309,8 +304,6 @@
                   ]]></Source>
                 </RenderScript>
               </ReportColumnConfig>
-              
-              
               <ReportColumnConfig field="irsStatus" header="IRS Status" hidden="true" property="irsStatus" width="110"/>
               <ReportColumnConfig field="irsCertDate" header="IRS Cert Date" hidden="true" property="irsCertDate" width="110"/>
             </Columns>
