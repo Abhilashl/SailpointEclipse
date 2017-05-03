@@ -98,7 +98,7 @@ logger.debug("STEP - Audit");
 AuditEvent auditEvent = new AuditEvent();
 
 auditEvent.setSource("Communication");
-auditEvent.setTarget(identityName);
+auditEvent.setTarget("Identity:" + identityName);
 auditEvent.setAction("identityLifecycleEvent");
 auditEvent.setString1("Immediate TERM");
 auditEvent.setString2("HR requested and workflow launched by ");
