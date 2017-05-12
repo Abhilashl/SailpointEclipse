@@ -4,7 +4,7 @@
   <Body>    
 &lt;html&gt;
 &lt;pre&gt;
-You are receiving this email because you are in violation of ACI standard 3.5.01. The ACI standard regarding the termination process, requires managers to initiate a termination action via the Manager Self Service” in Oracle HCM prior to the employees termination date.  Your failure to submit on time has caused this employee to retain access to ACI systems and networks, which in turn has weakened ACI’s security posture and potentially jeopardized ACI’s compliance with legal and regulatory requirements.  
+You are receiving this email because you are in violation of ACI standard 3.5.01. The ACI standard regarding the termination process, requires managers to initiate a termination action via the Manager Self Service in Oracle HCM prior to the employees termination date.  Your failure to submit on time has caused this employee to retain access to ACI systems and networks, which in turn has weakened ACI's security posture and potentially jeopardized ACI's compliance with legal and regulatory requirements.  
 
 Your ELT leader will also be notified of this failure. 
 
@@ -35,6 +35,6 @@ This e-mail message and any attachments may contain confidential, proprietary or
     </Inputs>
   </Signature>
   <Subject>
-     Violation of ACI Policy
+     Violation of ACI Policy - Late TERM Submission for $firstname $lastname
   </Subject>
 </EmailTemplate>
