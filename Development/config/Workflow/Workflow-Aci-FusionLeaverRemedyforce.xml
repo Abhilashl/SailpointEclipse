@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
 <Workflow explicitTransitions="true" monitored="true" name="ACI - Fusion Leaver RemedyForce" type="IdentityLifecycle">
-  <Variable initializer="true" input="true" name="trace"/>
+  <Variable initializer="true" name="trace"/>
   <Variable input="true" name="identityName"/>
   <Variable name="employeeEmail"/>
   <Variable name="networkId"/>
@@ -25,12 +25,21 @@
   <Variable initializer="true" name="notifyRemedyForce">
     <Description>if true, create an incident ticket for the new individual.</Description>
   </Variable>
+  <Variable initializer="true" name="notifyMgrLateNotice">
+    <Description>If true, notify the Managers and Manager&amp;#39;s Manager of the late submission.</Description>
+  </Variable>
+  <Variable initializer="true" name="auditEvent">
+    <Description>If true, add an audit event.</Description>
+  </Variable>
   <Description>Send email to RemedyForce to create Leaver ticket</Description>
+  <RuleLibraries>
+    <Reference class="sailpoint.object.Rule" name="aci_Library"/>
+  </RuleLibraries>
   <Step icon="Start" name="Start" posX="120" posY="91">
     <Transition to="Update Fields"/>
   </Step>
-  <Step icon="Stop" name="Stop" posX="627" posY="90"/>
-  <Step icon="Task" monitored="true" name="Update Fields" posX="264" posY="91">
+  <Step icon="Stop" name="Stop" posX="565" posY="89"/>
+  <Step icon="Task" name="Update Fields" posX="228" posY="92">
     <Arg name="country" value="ref:country"/>
     <Arg name="firstname" value="ref:firstname"/>
     <Arg name="address" value="ref:address"/>
@@ -53,13 +62,12 @@
     <Return name="networkId" to="networkId"/>
     <Script>
       <Source><![CDATA[
-
 /*
     Workflow:  ACI - Fusion Leaver RemedyForce
     Step:  Update Fields
     
-    Date:  August 4, 2016
-    Version:  1.0
+    Date:  May 11, 2017
+    Version:  1.1
 */
 import org.apache.log4j.Logger;
 import sailpoint.object.*;
@@ -89,6 +97,7 @@ String endDate = identityObject.getAttribute("enterpriseEndDate");
 String firstname = identityObject.getFirstname();
 String lastname = identityObject.getLastname();
 
+
 //Check if Null or empty
 if ( !Util.isNotNullOrEmpty(postalCode) ) postalCode = "";
 if ( !Util.isNotNullOrEmpty(region) ) region = "";
@@ -101,8 +110,8 @@ if ( !Util.isNotNullOrEmpty(division) ) division = "";
 if ( !Util.isNotNullOrEmpty(employeeTitle) ) employeeTitle = "";
 if ( !Util.isNotNullOrEmpty(networkId) ) networkId = "";
 if ( !Util.isNotNullOrEmpty(employeeEmail ) ) employeeEmail = "";
-logger.debug("6");
-//  Update WFlow variables
+
+//  Update WFlow variables++
 workflow.put("employeeEmail",employeeEmail);
 workflow.put("networkId",networkId);
 workflow.put("managerEmail",managerEmail);
@@ -121,13 +130,26 @@ workflow.put("endDate",endDate);
 workflow.put("firstname",firstname);
 workflow.put("lastname",lastname);
 
-logger.debug("Firstname: " + firstname + " Lastname: " + lastname + "  Email: " + employeeEmail);      
-        
-]]></Source>
+// Late Submission
+long numOfDaysSubmission = 0;
+
+if ( Util.isNotNullOrEmpty(endDate) ) {
+
+    // Determine if late on term Notice
+    numOfDaysSubmission = numOfDaysFromCurrent( endDate );
+    if ( numOfDaysSubmission < 0 ) {
+        // Late
+        workflow.put("numOfDaysSubmission", -1 * numOfDaysSubmission);
+    } else {
+        // In advance
+        workflow.put("numOfDaysSubmission", 0);
+    }
+}]]></Source>
     </Script>
+    <Transition to="Notify Manager Late Notice" when="numOfDaysSubmission &gt; 0"/>
     <Transition to="Generate RemedyForce Ticket"/>
   </Step>
-  <Step action="call:sendEmail" condition="notifyRemedyForce.equalsIgnoreCase(&quot;true&quot;)" configForm="Provisioning Notification Step Form" icon="Email" name="Generate RemedyForce Ticket" posX="442" posY="91">
+  <Step action="call:sendEmail" condition="notifyRemedyForce.equalsIgnoreCase(&quot;true&quot;)" configForm="Provisioning Notification Step Form" icon="Email" name="Generate RemedyForce Ticket" posX="420" posY="89">
     <Arg name="template" value="ACI - RemedyForce Leaver Email"/>
     <Arg name="cc">
       <Script>
@@ -162,5 +184,26 @@ return sendCc;
     <Arg name="personType" value="ref:personType"/>
     <Description>Create a RemedyForce ticket</Description>
     <Transition to="Stop"/>
+  </Step>
+  <Step action="call:sendEmail" condition="notifyMgrLateNotice.equalsIgnoreCase(&quot;true&quot;)" configForm="Provisioning Notification Step Form" icon="Email" name="Notify Manager Late Notice" posX="293" posY="197">
+    <Arg name="cc" value="mbox-idm-prd@aciworldwide.com"/>
+    <Arg name="template" value="ACI - Late Term Email"/>
+    <Arg name="to" value="mbox-idm-prd@aciworldwide.com"/>
+    <Description>
+      	  Notify the various actors specified on notification scheme.
+        </Description>
+    <Transition to="Add Audit Event"/>
+  </Step>
+  <Step action="audit" condition="auditEvent.equalsIgnoreCase(&quot;true&quot;)" icon="Audit" name="Add Audit Event" posX="421" posY="199">
+    <Arg name="string3" value="script:return &quot;(Manager: &quot; + managerName + &quot;)&quot;"/>
+    <Arg name="string4" value="script:return &quot;Submission is &quot; + numOfDaysSubmission + &quot; day(s) late&quot;"/>
+    <Arg name="string1" value="Late Term Submission"/>
+    <Arg name="string2" value="Violation of ACI termination policy"/>
+    <Arg name="action" value="identityLifecycleEvent"/>
+    <Arg name="source" value="LCM"/>
+    <Arg name="event"/>
+    <Arg name="target" value="script:return &quot;Identity:&quot; + identityName;"/>
+    <Description>Add an audit event since the manager was late with the submission.</Description>
+    <Transition to="Generate RemedyForce Ticket"/>
   </Step>
 </Workflow>

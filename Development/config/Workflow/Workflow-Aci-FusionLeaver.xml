@@ -230,9 +230,6 @@
   <Variable initializer="string:true" name="notifyManager">
     <Description>If true, notify the Manager of the termination.</Description>
   </Variable>
-  <Variable initializer="string:true" name="notifyMgrLateNotice">
-    <Description>If true, notify the Managers and Manager&amp;#39;s Manager of the late submisison.</Description>
-  </Variable>
   <Variable initializer="string:true" name="notifyIRSContact">
     <Description>If true, notify the ACI&amp;#39;s internal and external IRS contacts of the termination.</Description>
   </Variable>
@@ -241,13 +238,6 @@
   </Variable>
   <Variable initializer="string:true" name="auditEvent">
     <Description>If true, add an audit event.</Description>
-  </Variable>
-  <Variable initializer="script:return 0;" name="numOfDaysSubmission">
-    <Description>Number of days the notification to Sailpoint versus the actual TERM date.
-
-&amp;gt;0  Days in advance
-=0 Same day
-&amp;lt;0 Late submission</Description>
   </Variable>
   <Description>This workflow will perform each of these steps.
 Disable all accounts in the identity.
@@ -266,8 +256,8 @@ Email HR and the manager</Description>
     Workflow:  ACI - Fusion Leaver
     Step:  Create Disable Account Request
     
-    Date:  January 13, 2017
-    Version:  1.3
+    Date:  May 12,, 2017
+    Version:  1.35
 */
 
 import org.apache.log4j.Logger;
@@ -284,7 +274,7 @@ logger.debug("ACI - Fusion Leaver(Create Disable Account Request)");
 
 DateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 now = new Date();
-long numOfDaysSubmission = 0;
+long numOfDaysProcessed = 0;
 
 String sendLdapNotification = "false";
 
@@ -307,8 +297,6 @@ if ( ou.equals("EMEA") ) {
     logger.debug("\tmbox-am-orientation@aciworldwide.com");
     workflow.put("hrEmail", "mbox-am-orientation@aciworldwide.com");
 }
-
-String termDate = "";
 
 Identity managerObj = identityObj.getManager();
 
@@ -481,39 +469,7 @@ if ( null != linkLists ) {
                 applist.add(map);  
                 break;
             } // switch
-                   
-        // Is application Authoritative?
-        if ( isAppAuth) {
-            link.setAttribute("IIQDisabled", "true");
-
-            // Get Fusion Term date if available
-            if ( appName.toLowerCase().contains("fusion" ) ) {
-                termDate = link.getAttribute("ACTUAL_TERMINATION_DATE");
-                logger.debug("Before subMitTermDate");
-                String submitRemedyTicket = getWFDate("Fusion Leaver RemedyForce", identityName);
-                
-                System.out.println("submitRemedyTicket=" + submitRemedyTicket);
-            
-                if ( Util.isNotNullOrEmpty(termDate) ) {
-                
-                    // Determine if late on term Notice
-                    if ( numOfDaysFrom( submitRemedyTicket, termDate) < 0 ) {
-                        //Possible Late
-	                    numOfDaysSubmission = numOfDaysFromCurrent(termDate);
-	                    if ( numOfDaysSubmission < 0  ) {
-	                        // Late
-	                        workflow.put("numOfDaysSubmission", -1 * numOfDaysSubmission);
-	                    } else {
-	                        // Ok
-	                        workflow.put("numOfDaysSubmission", 0);
-	                    }                    
-                    }
-                } else {
-                   termDate = "Immediate";
-                   workflow.put("numOfDaysSubmission", 0);
-                }
-            }
-        } 
+                  
     } //for ( Link 
 } // if
 
@@ -532,13 +488,20 @@ workflow.put("lastname", identityObj.getLastname());
 workflow.put("employeeEmail", identityObj.email);
 workflow.put("networkId", identityObj.getAttribute("networkId"));
 workflow.put("employeeTitle", identityObj.getAttribute("employeeTitle"));
-workflow.put("personType", identityObj.getAttribute("personType"));
+
+String personType = identityObj.getAttribute("personType");
+workflow.put("personType", personType);
+
 workflow.put("department", identityObj.getAttribute("DEPT_NAME"));
 workflow.put("location", identityObj.getAttribute("location"));
 workflow.put("country", identityObj.getAttribute("country"));
 workflow.put("company", identityObj.getAttribute("company"));
+
+String termDate = identityObj.getAttribute("enterpriseEndDate");
 workflow.put("termDate", termDate);
+
 workflow.put("sendLdapNotification", sendLdapNotification);
+
 
 // IRS Certified?
 String identityIRSStatus = identityObj.getAttribute("irsStatus");
@@ -552,11 +515,27 @@ if ("IRS Certified".equalsIgnoreCase(identityIRSStatus) || "IRS Prep".equalsIgno
     workflow.put("irsCertDate", identityIRSCertDate);
     workflow.put("irsAccess", "true");
 } else {
-
     // No IRS affiliation
     workflow.put("irsAccess", "false");
 }
-logger.debug("numOfDaysSubmission=" + numOfDaysSubmission);
+
+// Late processed?
+if ( Util.isNotNullOrEmpty(personType) ) {
+    if ( Util.isNotNullOrEmpty(termDate) ) {
+        // Determine if late on term Notice
+        numOfDaysProcessed = numOfDaysFromCurrent( termDate );
+        if ( numOfDaysProcessed < -1 ) {
+            // Late
+            workflow.put("numOfDaysProcessed", -1 * (1 + numOfDaysProcessed));
+        } else {
+            // Not Late
+            workflow.put("numOfDaysProcessed", 0);
+        }
+    } else {
+        termDate = "Immediate";
+        workflow.put("numOfDaysProcessed", 0);
+    }                
+}
 return plan;]]></Source>
     </Script>
     <Transition to="Notify ACI IRS Contacts"/>
@@ -707,29 +686,20 @@ context.sendEmailNotification(et, options);
     <Arg name="to" value="mbox-aci-irs-comms@aciworldwide.com,natalie.boston@irs.gov"/>
     <Description>Notify the ACI contact(s) and ACI's IRS contact of a term
         </Description>
-    <Transition to="Notify Manager Late Notice" when="numOfDaysSubmission &gt; 0"/>
+    <Transition to="Add Audit Event" when="numOfDaysProcessed &gt; 0"/>
     <Transition to="Compile Project"/>
   </Step>
-  <Step action="call:sendEmail" condition="notifyMgrLateNotice.equalsIgnoreCase(&quot;true&quot;)" configForm="Provisioning Notification Step Form" icon="Email" name="Notify Manager Late Notice" posX="411" posY="284">
-    <Arg name="cc" value="mbox-idm-prd@aciworldwide.com"/>
-    <Arg name="template" value="ACI - Late Term Email"/>
-    <Arg name="bcc" value="mbox-idm-prd@aciworldwide.com"/>
-    <Arg name="to" value="mbox-idm-prd@aciworldwide.com"/>
-    <Description>
-          Notify the various actors specified on notification scheme.
-        </Description>
-    <Transition to="Add Audit Event"/>
-  </Step>
-  <Step action="audit" condition="auditEvent.equalsIgnoreCase(&quot;true&quot;)" icon="Audit" name="Add Audit Event" posX="518" posY="284">
-    <Arg name="string3" value="script:return &quot;(Manager: &quot; + managerName + &quot;)&quot;;"/>
-    <Arg name="string4" value="script:return &quot;Submission is &quot; + numOfDaysSubmission + &quot; day(s) late&quot;;"/>
-    <Arg name="string1" value="Late Term Submission"/>
+  <Step action="audit" condition="auditEvent.equalsIgnoreCase(&quot;true&quot;)" icon="Audit" name="Add Audit Event" posX="465" posY="271">
+    <Arg name="string3"/>
+    <Arg name="string4" value="script:return &quot;Processed is &quot; + numOfDaysProcessed  + &quot; day(s) late&quot;;"/>
+    <Arg name="string1" value="Late Term Processed"/>
     <Arg name="string2" value="Violation of ACI termination policy"/>
     <Arg name="action" value="identityLifecycleEvent"/>
-    <Arg name="source"/>
+    <Arg name="source" value="LCM"/>
     <Arg name="event"/>
-    <Arg name="target" value="ref:identityName"/>
-    <Description>Add an audit event since the manager was late with the submission.</Description>
+    <Arg name="target" value="script:return &quot;Identity:&quot; + identityName;"/>
+    <Description>Add an audit event since Sailpoint did not process the TERM on time.
+The reason could be either a technical issue or a late submission.</Description>
     <Transition to="Compile Project"/>
   </Step>
 </Workflow>
