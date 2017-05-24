@@ -186,9 +186,9 @@ return sendCc;
     <Transition to="Stop"/>
   </Step>
   <Step action="call:sendEmail" condition="notifyMgrLateNotice.equalsIgnoreCase(&quot;true&quot;)" configForm="Provisioning Notification Step Form" icon="Email" name="Notify Manager Late Notice" posX="293" posY="197">
+    <Arg name="to" value="mbox-aci-UAT-Cloud@aciworldwide.com,mbox-aci-hris@aciworldwide.com"/>
+    <Arg name="template" value="ACI - Late Term Submission Email"/>
     <Arg name="cc" value="mbox-idm-prd@aciworldwide.com"/>
-    <Arg name="template" value="ACI - Late Term Email"/>
-    <Arg name="to" value="mbox-idm-prd@aciworldwide.com"/>
     <Description>
       	  Notify the various actors specified on notification scheme.
         </Description>
