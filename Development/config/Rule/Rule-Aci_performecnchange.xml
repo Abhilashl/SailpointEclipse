@@ -39,8 +39,8 @@
     Rule:  aci_PerformECNChange
     Author:  Steve Nuffer
 	
-    Date:  November 11, 2016	
-    Version: 1.42
+    Date:  May 26, 2017	
+    Version: 1.5
     
     If ( Change Dept, Location, Department #, Title) AND (CURRENT_EMPLOYEE_FLAG Y --> Y)
         Send ECN
@@ -132,7 +132,7 @@ if ( !Util.isNotNullOrEmpty(oldManagerPersonID ) ) oldManagerPersonID = "";
 if ( !Util.isNotNullOrEmpty(newManagerPersonID ) ) newManagerPersonID = "";
 
 // Compare old and new values
-if ( ! oldLocation.equalsIgnoreCase(newLocation) ) performLCM = true;
+if ( ! oldLocation.equalsIgnoreCase(newLocation) &&  ! oldLocation.toLowerCase().contains("contractor") ) performLCM = true;
 if ( ! oldDeptNum.equalsIgnoreCase(newDeptNum) ) performLCM = true;
 if ( ! oldemployeeTitle.equalsIgnoreCase(newemployeeTitle) ) performLCM = true;
 if ( ! oldManagerPersonID.equalsIgnoreCase(newManagerPersonID) ) performLCM = true;
