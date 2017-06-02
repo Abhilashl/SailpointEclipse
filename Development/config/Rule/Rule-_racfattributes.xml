@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="_RACFAttributes">
+  <Description>This rule can be executed in the console or in debug mode to return information </Description>
+  <Source><![CDATA[
+
+/*
+        Rule:  _RACFAttributes
+        Author:  Steve Nuffer
+		
+				Version: 1.25
+*/
+  
+import org.apache.log4j.Logger; 
+import sailpoint.object.*;
+import org.apache.jmeter.services.FileServer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import sailpoint.tools.Util;
+
+String appName = "PRD RACF MFZ900ACW9";
+String runningASUser = System.getProperty("user.name");
+
+Logger log = Logger.getLogger("com.aci.rule.aci_SourceMapping");
+String csvFileName = "\\\\cov6nas02\\slpprdxfr\\sailpoint\\_RACFAttributes." + runningASUser + ".csv";
+
+DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+// Create the File handle
+File csvFile = new File(csvFileName);
+try
+{    
+    fileWriter = new PrintWriter( new FileOutputStream( csvFile ));
+}
+catch ( Exception e )
+{
+    // User doesn't have permission to write    
+    return "Execute from Console OR the file is open";
+}
+
+System.out.println("****************  " + appName + "  ****************\n");
+Application app = context.getObjectByName(Application.class, appName);
+
+if (null == app) {
+   log.error("Could not find application named:" + appName);
+   return;
+}
+
+Filter qoFilter = Filter.eq("application", app);
+
+QueryOptions qo = new QueryOptions();
+qo.addFilter(qoFilter);
+
+//Print to a file
+//  Printer header to CSV file
+fileWriter.println("identityCreated!identityAuth!isActive!identitytName!identityFname!identityEmail!identityLname!acctUserName!acctName!acctType!acctCreateDate!acctLastLoginDate!acctLastLoginTime!acctPasswordChg!acctDisabled");
+
+Iterator it = context.search(Link.class, qo);
+while (it.hasNext()) {
+    Link link = (Link) it.next();
+
+    String identitytName  = "";
+    String idendityPersonID = "";
+    String identityFname = "";
+    String identityEmail = "";
+    String identityLname = "";
+    Date identityCreated = null;
+    boolean identityAuth = false;
+    boolean isActive = false;
+    
+    String acctUserName = "";
+    String acctName = "";
+    String acctType = "";
+    String acctCreateDate = "";
+    String acctLastLoginDate = "";
+    String acctLastLoginTime = "";
+    String acctPasswordChg = "";
+    boolean acctDisabled = false;
+
+	// Get Identity attributes
+	Identity identity = link.getIdentity();
+    try { identitytName  = identity.getDisplayName(); } catch ( Exception e ) {}
+    try { idendityPersonID = identity.getStringAttribute("personId"); } catch ( Exception e ) {}
+
+    try { identityFname = identity.getFirstname();  } catch ( Exception e ) {}
+    try { identityEmail = identity.getEmail();  } catch ( Exception e ) {} 
+    try { identityLname = identity.getLastname(); } catch ( Exception e ) {}
+    try { identityCreated = identity.getCreated(); } catch ( Exception e ) {}
+    try { identityAuth = identity.isCorrelated(); } catch ( Exception e ) {}
+    try { isActive = !(identity.isInactive()); } catch ( Exception e ) {}
+
+	// Get application attributes
+    Attributes attributes = link.getAttributes();
+    try { acctUserName = link.getNativeIdentity(); } catch ( Exception e ) {}
+    try { acctName = attributes.getString("NAME"); } catch ( Exception e ) {}
+    try { acctType = attributes.getString("accountType"); } catch ( Exception e ) {}
+    try { acctCreateDate = attributes.getString("INFO.CREATE_DATE"); } catch ( Exception e ) {}
+    try { acctLastLoginDate = attributes.getString("INFO.LAST_LOGIN_DATE"); } catch ( Exception e ) {}
+    try { acctLastLoginTime = attributes.getString("INFO.LAST_LOGIN_TIME"); } catch ( Exception e ) {}
+    try { acctPasswordChg = attributes.getString("INFO.PASSCHG_DATE"); } catch ( Exception e ) {}
+    try { acctDisabled = link.isDisabled() } catch ( Exception e ) {}
+    
+    if ( !Util.isNotNullOrEmpty(identityLname) ) identityLname = "None";
+    if ( !Util.isNotNullOrEmpty(identityFname) ) identityFname = "None";   
+    if ( !Util.isNotNullOrEmpty(identityEmail) ) identityEmail = "None";
+    if ( !Util.isNotNullOrEmpty(identitytName) ) identitytName = "None";
+    if ( !Util.isNotNullOrEmpty(idendityPersonID) ) idendityPersonID = "None";
+    if ( !Util.isNotNullOrEmpty(acctUserName) ) acctUserName = "None";
+    if ( !Util.isNotNullOrEmpty(acctName) ) acctName = "None";
+    if ( !Util.isNotNullOrEmpty(acctType) ) acctType = "None";
+    if ( !Util.isNotNullOrEmpty(acctCreateDate) ) acctCreateDate = "None";
+    if ( !Util.isNotNullOrEmpty(acctLastLoginDate) ) acctLastLoginDate = "None";
+    if ( !Util.isNotNullOrEmpty(acctLastLoginTime) ) acctLastLoginTime = "None";
+    if ( !Util.isNotNullOrEmpty(acctPasswordChg) ) acctPasswordChg = "None";
+
+	//Print row to a file   
+    try {
+        fileWriter.println(dateFormat.format(identityCreated) + "!" + identityAuth + "!" + isActive + "!" + identitytName + "!" + identityFname + "!" + identityEmail + "!" + identityLname + "!" + acctUserName + "!" + acctName + "!" + acctType + "!" + acctCreateDate + "!" + acctLastLoginDate + "!" + acctLastLoginTime+ "!" + acctPasswordChg + "!" + acctDisabled);
+    } catch(Exception e) {
+        System.out.println("++++ " + identitytName);
+    }
+}
+
+// Close File handles
+fileWriter.flush();
+fileWriter.close();
+
+  sailpoint.tools.Util.flushIterator(it);
+
+return "Contents saved to " + csvFileName + "    ***  Delimeter is !  ***";
+
+
+]]></Source>
+</Rule>
