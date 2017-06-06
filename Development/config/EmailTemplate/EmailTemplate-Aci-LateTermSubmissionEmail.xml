@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="ACI - Late Term Submission Email">
+  <Body>    
+&lt;html&gt;
+&lt;pre&gt;
+You are hereby advised that you are in violation of the ACI Global Information Security Policy and ACI Standard 3.0 (Personnel Security).  As a manager, you are required to initiate a termination action via the Manager Self Service Portal in Oracle HCM &lt;u&gt;prior&lt;/u&gt; to an employee&apos;s termination date and/or if a contingent worker exits earlier than planned contract end date, you must contact Vendor Management to make the update.  Your failure to timely submit an employee termination has resulted in heightened risk and liability to ACI for potentially unauthorized facility and system access and has jeopardized ACI&apos;s compliance with legal, regulatory, and contractual obligations.
+
+Violations of ACI Policies and Standards are taken seriously and your ELT Leader will be or has been notified.  Please review the &lt;a href="https://aciww.sharepoint.com/sites/peer2peer/hr/manres/hr%20guides/separation%20process/manager's%20Checklist%20of%20Procedures%20for%20U.S.%20Employee%20and%20Contractor%20Seperation.pdf"&gt;Manager Checklist for Employee Terminations&lt;/a&gt; and the &lt;a href="https://aciww.sharepoint.com/sites/Peer2Peer/hr/emdev/Document%20Library%202/Oracle%20HCM%20-%20Reference%20Material/Employee%20and%20Manager%20Self%20Service/ACI%20Manager%20Self%20Service%20-%20Termination.pdf"&gt;Oracle HCM Employee Termination QRG&lt;/a&gt; when processing employee terminations and the &lt;a href="https://aciww.sharepoint.com/sites/ad/team/VMTeam/SitePages/Home.aspx"&gt;Vendor Management Site&lt;/a&gt; for early exiting contractors to ensure your compliance going forward.
+
+If you have any questions, please contact your Human Resources representative.
+
+Human Resources and Global Information Security
+&lt;br&gt;
+&lt;B&gt;Statement of Confidentiality: &lt;/B&gt;
+This e-mail message and any attachments may contain confidential, proprietary or on-public information. This information is intended solely for the designated recipient(s). If an addressing or transmission error has misdirected this e-mail, please notify the sender immediately and destroy this e-mail. Any review, dissemination, use or reliance upon this information by unintended recipients is prohibited.     
+&lt;/pre&gt;     
+&lt;html&gt;
+ </Body>
+  <Description>
+	Email template for Late TERM Submission
+  </Description>
+  <Signature>
+    <Inputs>
+      <Argument name="firstname" type="string">
+        <Description>Identity</Description>
+      </Argument>
+      <Argument name="lastname" type="string">
+        <Description>Identity</Description>
+      </Argument>
+      <Argument name="networkId" type="string">
+        <Description>Network Id </Description>
+      </Argument>
+      <Argument name="email" type="string">
+        <Description>Employee email </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Subject>
+     Violation of ACI Policy - Late TERM Submission for $firstname $lastname
+  </Subject>
+</EmailTemplate>
