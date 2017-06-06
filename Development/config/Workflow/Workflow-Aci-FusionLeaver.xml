@@ -256,8 +256,8 @@ Email HR and the manager</Description>
     Workflow:  ACI - Fusion Leaver
     Step:  Create Disable Account Request
     
-    Date:  May 12,, 2017
-    Version:  1.35
+    Date:  June 6, 2017
+    Version:  1.4
 */
 
 import org.apache.log4j.Logger;
@@ -498,7 +498,6 @@ workflow.put("country", identityObj.getAttribute("country"));
 workflow.put("company", identityObj.getAttribute("company"));
 
 String termDate = identityObj.getAttribute("enterpriseEndDate");
-workflow.put("termDate", termDate);
 
 workflow.put("sendLdapNotification", sendLdapNotification);
 
@@ -536,6 +535,9 @@ if ( Util.isNotNullOrEmpty(personType) ) {
         workflow.put("numOfDaysProcessed", 0);
     }                
 }
+// Set WF Variable
+workflow.put("termDate", termDate);
+
 return plan;]]></Source>
     </Script>
     <Transition to="Notify ACI IRS Contacts"/>
