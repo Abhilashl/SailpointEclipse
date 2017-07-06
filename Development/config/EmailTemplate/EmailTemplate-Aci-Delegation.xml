@@ -63,7 +63,7 @@
             &lt;/tr&gt;
             &lt;/table&gt;
             &lt;!-- CHANGE STYLE COLOR IN anchor or a TAG BELOW and in all anchor tags that apply below : red - #a22831 ; blue - #0987a0 --&gt;
-            &lt;p style="margin:20px 0;padding:0;color:#333;font:bold 10pt Arial;line-height:15pt;"&gt;&lt;a href="http://localhost:8080/identityiq" style="color:#0987a0;"&gt;Click here to get started on this task.&lt;/a&gt;&lt;/p&gt;
+            &lt;p style="margin:20px 0;padding:0;color:#333;font:bold 10pt Arial;line-height:15pt;"&gt;&lt;a href="%%BASE_URL%%" style="color:#0987a0;"&gt;Click here to get started on this task.&lt;/a&gt;&lt;/p&gt;
             &lt;p style="margin:0 0 20px;padding:0;color:#333;font:normal 10pt Arial;line-height:15pt;"&gt;Comments from $!{requesterName}:&lt;/p&gt;
             &lt;p style="margin:0 0 20px;padding:0;color:#333;font:normal 10pt Arial;line-height:15pt;"&gt;$!{comments}&lt;/p&gt;
             &lt;p style="margin:0;padding:0;color:#333;font:normal 10pt Arial;line-height:15pt;"&gt;Thank you for your cooperation&lt;/p&gt;
