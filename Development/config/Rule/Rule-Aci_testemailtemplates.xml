@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_TestEmailTemplates" type="IdentityAttribute">
+  <Description>This rule is used for testing email templates</Description>
+  <Signature returnType="String"/>
+  <Source><![CDATA[
+import org.apache.log4j.Logger;
+  import sailpoint.object.*;
+  import java.util.List;
+  import java.io.*;
+  import java.util.*;
+  import sailpoint.object.*;
+
+  Logger log = Logger.getLogger("com.aci.account.rule.TestEmailTemplates");  
+  
+  Identity identityObject = context.getObjectByName(Identity.class, "dorian.yates@aciworldwide.com");
+  String displayName = identityObject.getDisplayName();
+  
+  EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "New Certification - HTML");
+  EmailOptions options = new EmailOptions();
+  
+  //set to address
+  emailTemplate.setTo("mbox-idm-prd@aciworldwide.com");
+  options.setSendImmediate(true);
+  options.setVariable("identityDisplayName", displayName);
+  options.setVariable("identityObject", identityObject);
+  options.setVariable("workItemName", "Manager Access Review");
+  context.sendEmailNotification(emailTemplate, options);
+    
+]]></Source>
+</Rule>

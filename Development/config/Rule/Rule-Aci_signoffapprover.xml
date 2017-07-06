@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_SignOffApprover" type="CertificationSignOffApprover">
+  <Description>This rule is run when the certification is signed off to determine who (if anyone) needs to approve the certification decisions.  If this returns a non-null identity, the certification is forwarded to the returned identity.</Description>
+  <Signature returnType="Map">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="certification">
+        <Description>
+          The sailpoint.object.Certification that was signed.
+        </Description>
+      </Argument>
+      <Argument name="certifier">
+        <Description>
+          The sailpoint.object.Identity that signed the certification.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="identityName">
+        <Description>
+        The name of the Identity that should approve the certification.  Either
+        this or 'identity' should be non-null if certification sign off approval
+        is desired.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+        The Identity that should approve the certification.  Either this or
+        'identityName' should be non-null if certification sign off approval
+        is desired.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source><![CDATA[import sailpoint.object.Certification;
+import sailpoint.object.Identity;
+// if cert signoff history indicates it has already been signed off once,
+// do not submit to any other levels of approval
+
+List history = certification.getSignOffHistory();
+if ( history == null || history.isEmpty() || history.size()<2 ) {
+
+Map results = new HashMap();
+//Update to identity name that should approve for example Erik Battle
+results.put("identityName", "erik.battle@aciworldwide.com");
+
+return results;
+} else {
+return null;
+}]]></Source>
+</Rule>

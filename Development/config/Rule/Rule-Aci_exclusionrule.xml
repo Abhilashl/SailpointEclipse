@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="aci_ExclusionRule" type="CertificationExclusion">
+  <Description>This rule is an example Certification Exclusion rule that removes all of the certifiable items from a certification if the identity being certified is marked as inactive.</Description>
+  <Signature returnType="String"/>
+  <Source><![CDATA[import sailpoint.object.*;
+import sailpoint.api.*;
+import java.util.Iterator;
+import sailpoint.object.EntitlementGroup;
+import java.util.ListIterator;
+import sailpoint.object.Identity;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.CertificationItem.Type.*;
+import sailpoint.web.group.*;
+import sailpoint.api.certification.*;
+ 
+ 
+ 
+String accountGroupName = entity.value;
+ 
+//Change these names to actual AD Group name
+String dagroupname = "Domain Admins Test";
+String intelgroup = "Intel";
+//String eagroupname = "Enterprise Admins";
+
+
+//Check if its one of the DA or EA group
+//if ( !accountGroupName.contains( dagroupname ) &amp;&amp; !accountGroupName.contains(eagroupname)  ) {
+if ( !accountGroupName.contains( dagroupname ) && !accountGroupName.contains(intelgroup) ) {  
+  itemsToExclude.addAll(items);
+  items.clear();
+  items.removeAll(items);
+ 
+ 
+
+}
+
+List certs = certification.getCertifiers();
+certs.add("jay.fox");
+certification.setCertifiers(certs);]]></Source>
+</Rule>
