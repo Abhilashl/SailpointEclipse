@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate cc="$!{identity.manager.email}" name="ACI - Remediation Notification">
+  <Body>    
+
+
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"&gt;
+&lt;head&gt;
+
+  &lt;title&gt;Access Revoked by: $!{requesterName}&lt;/title&gt;
+    
+&lt;/head&gt;
+
+&lt;body style="background:#FFF;margin:0;padding:0;text-align:left;"&gt;
+
+  &lt;table cellpadding="0" cellspacing="0" width="588" border="0" align="center" style="margin:0 auto;padding:0;"&gt;
+    &lt;tr valign="top"&gt;
+      &lt;td height="20"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr valign="top"&gt;
+      &lt;!-- CHANGE IMAGE SRC TO CLIENT LOGO --&gt;
+      &lt;td align="right" height="79" width="295"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+        &lt;!-- /CLIENT LOGO --&gt;
+    &lt;/tr&gt;
+    &lt;tr valign="top"&gt;
+        &lt;td height="7"&gt;&amp;nbsp;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr valign="top"&gt;
+        &lt;td&gt;
+        &lt;!-- EMAILER CONTENT BEGINS --&gt;
+        
+        &lt;!-- HEADER --&gt;
+        &lt;!-- CHANGE BACKGROUND COLOR IN STYLE BELOW: blue - #0987a0 ; tan - #847f5c --&gt;
+        &lt;table cellpadding="0" cellspacing="0" width="588" style="background:#0987a0;margin:0;padding:0;text-align:left;border-bottom:5px solid #e4e4e4;"&gt;
+        &lt;tr valign="middle"&gt;
+          &lt;td width="30" height="85"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+            &lt;td&gt;&lt;!-- CHANGE COLOR STYLE BELOW: blue - #98bec6 ; tan - #b5b192 --&gt;
+                &lt;h2 style="color:#98bec6;margin:0;padding:0;font:bold 11pt Arial;text-transform:uppercase;"&gt;Revocation Notification&lt;/h2&gt;
+                &lt;h1 style="color:#fff;margin:0;padding:0;font:bold 20pt Arial;"&gt;Items Revoked by $!{requesterName}&lt;/h1&gt;             
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;!-- /HEADER --&gt;
+        
+        &lt;!-- CONTENT --&gt;
+        &lt;table cellpadding="0" cellspacing="0" width="588" style="background:#fff;margin:0;padding:0;text-align:left;border-left:4px solid #ccc;border-right:4px solid #ccc;"&gt;
+        &lt;tr valign="top"&gt; 
+          &lt;td colspan="3" height="40"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr valign="top"&gt;
+          &lt;td&gt;&lt;img src="http://www.sailpoint.com/mailers/task-alert/+___.gif" height="1" width="30" alt="" /&gt;&lt;/td&gt;
+          &lt;td&gt;
+            
+            &lt;table cellpadding="0" cellspacing="0" width="100%" border="0"&gt;
+            &lt;tr valign="bottom"&gt;
+            &lt;td&gt;
+            &lt;p style="margin:0;padding:0;color:#333;font:bold 10pt Arial;line-height:15pt;"&gt;&lt;/p&gt;
+            &lt;p/&gt;
+            &lt;p style="margin:0;padding:0;color:#333;font: 10pt Arial;line-height:15pt;"&gt;$!{requesterName} has revoked one or more entitlements from you.&lt;/p&gt;
+            &lt;br/&gt;
+            &lt;p style="margin:0;padding:0;color:#333;font: bold 10pt Arial;line-height:15pt;"&gt;Comments from $requesterName:&lt;/p&gt;
+            &lt;br/&gt;
+            &lt;p style="margin:0;padding:0;color:#333;font: 10pt Arial;line-height:15pt;"&gt;$!{comments}&lt;/p&gt;
+            &lt;br/&gt;
+
+#if ($remediationDetails.nonModifyAccountRequests &amp;&amp;
+     $remediationDetails.getNonModifyAccountRequests().size() &gt; 0)
+
+            &lt;p style="margin:0;padding:0;color:#333;font: bold 10pt Arial;line-height:15pt;"&gt;Account Requests:&lt;/p&gt;
+            &lt;br/&gt;
+            &lt;p style="margin:0;padding:0;color:#333;font: 10pt Arial;line-height:15pt;"&gt;
+      
+#foreach ($acctReq in $remediationDetails.nonModifyAccountRequests)
+Application: $acctReq.applicationName &lt;br/&gt;
+  Operation: $acctReq.operation &lt;br/&gt;
+ Account ID: $acctReq.nativeIdentity &lt;br/&gt;&lt;br/&gt;
+
+&lt;/p&gt;
+
+#end
+#end
+#if ($remediationDetails.modifyAccountRequests &amp;&amp;
+     $remediationDetails.getModifyAccountRequests().size() &gt; 0)
+
+      &lt;p style="margin:0;padding:0;color:#333;font: bold 10pt Arial;line-height:15pt;"&gt;Modification Requests:&lt;/p&gt;
+            &lt;br/&gt;
+            &lt;p style="margin:0;padding:0;color:#333;font: 10pt Arial;line-height:15pt;"&gt;
+
+#foreach ($acctReq in $remediationDetails.modifyAccountRequests)
+Application: $acctReq.applicationName &lt;br/&gt;
+#if ($acctReq.nativeIdentity) ## Role modification requests in IIQ won't have a nativeIdentity
+ Account ID: $acctReq.nativeIdentity &lt;br/&gt;
+#end
+
+#foreach ($attrReq in $acctReq.attributeRequests)
+  Operation: $attrReq.operation &lt;br/&gt;
+  Attribute: $attrReq.name &lt;br/&gt;
+   Value(s): $attrReq.value &lt;br/&gt;&lt;br/&gt;
+
+#end
+#foreach ($permReq in $acctReq.permissionRequests)
+  Operation: $permReq.operation &lt;br/&gt;
+ Permission: $permReq.target &lt;br/&gt;
+   Right(s): $permReq.rightsList &lt;br/&gt;&lt;br/&gt;
+
+#end
+
+#end
+#end                       
+            &lt;/p&gt;
+            &lt;br/&gt;
+            &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;/table&gt;
+            &lt;!-- CHANGE STYLE COLOR IN anchor or a TAG BELOW and in all anchor tags that apply below : red - #a22831 ; blue - #0987a0 --&gt;
+            &lt;p style="margin:0;padding:0;color:#333;font:normal 10pt Arial;line-height:15pt;"&gt;Thank you for your cooperation&lt;/p&gt;
+            &lt;p style="margin:0 0 50px;padding:0;color:#333;font:bold 10pt Arial;line-height:15pt;"&gt;Your Security and Compliance Team&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td width="40"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr valign="top"&gt;
+          &lt;td colspan="3"&gt;
+            &lt;p style="margin:0 0 0 30px;padding:0;color:#b0adad;font:normal 8pt Arial;line-height:12pt;margin-bottom:30px"&gt;&lt;a href="#" style="color:#666666;text-decoration:none;font-weight:bold;"&gt;Help&lt;/a&gt; &amp;nbsp;|&amp;nbsp; &lt;a href="#" style="color:#666666;text-decoration:none;font-weight:bold;"&gt;FAQs&lt;/a&gt; &amp;nbsp;|&amp;nbsp; &lt;a href="#" style="color:#666666;text-decoration:none;font-weight:bold;"&gt;Support&lt;/a&gt;&lt;/p&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;!-- /CONTENT --&gt;
+        
+        &lt;!-- FOOTER --&gt;
+        &lt;!-- CHANGE BACKGROUND COLOR IN STYLE BELOW: blue - #0987a0 ; tan - #847f5c --&gt;
+        &lt;table cellpading="0" cellspacing="0" width="588" style="background:#0987a0;margin:0;padding:0;text-align:right;border-top:5px solid #e4e4e4;"&gt;
+        &lt;tr valign="middle"&gt;
+          &lt;td height="60"&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;!-- /FOOTER --&gt;
+        
+        &lt;!-- /EMAILER --&gt;
+        &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;/table&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+    
+    </Body>
+  <Description>
+      Email Template for notifying users that an item has been remediated.
+      Notice that this is setup to CC the user's manager (see CC attribute above).
+
+      Arguments
+      ---------
+      item:                The CertificationItem being remediated.
+      remediationDetails:  The ProvisioningPlan with the entitlements being removed.
+                           (Convenience accessor for item.action.remediationDetails)
+      identity:            The Identity that is having their item remediated.
+      comments:            Comments from the remediator about the remediation.
+      requester:           The Identity that remediated the item.
+      requesterName:       Full name of the Identity that remediated the item.
+                           (Convenience accessor for requestor.fullName)
+    </Description>
+  <Subject>Access is being revoked by $!{requesterName}</Subject>
+</EmailTemplate>

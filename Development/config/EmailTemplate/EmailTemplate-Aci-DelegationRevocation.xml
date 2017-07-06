@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="ACI - Delegation Revocation">
+  <Body>    
+
+
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"&gt;
+&lt;head&gt;
+
+  &lt;title&gt;Work Item Revoked: $!{workItemName}&lt;/title&gt;
+    
+&lt;/head&gt;
+
+&lt;body style="background:#FFF;margin:0;padding:0;text-align:left;"&gt;
+
+  &lt;table cellpadding="0" cellspacing="0" width="588" border="0" align="center" style="margin:0 auto;padding:0;"&gt;
+    &lt;tr valign="top"&gt;
+      &lt;td height="20"&gt;&amp;nbsp;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr valign="top"&gt;
+      &lt;!-- CHANGE IMAGE SRC TO CLIENT LOGO --&gt;
+      &lt;td align="right" width="295" height="79"&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;!-- /CLIENT LOGO --&gt;
+    &lt;/tr&gt;
+    &lt;tr valign="top"&gt;
+        &lt;td height="7"&gt;&amp;nbsp;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr valign="top"&gt;
+        &lt;td&gt;
+        &lt;!-- EMAILER CONTENT BEGINS --&gt;
+        
+        &lt;!-- HEADER --&gt;
+        &lt;!-- CHANGE BACKGROUND COLOR IN STYLE BELOW: blue - #0987a0 ; tan - #847f5c --&gt;
+        &lt;table cellpadding="0" cellspacing="0" width="588" style="background:#0987a0;margin:0;padding:0;text-align:left;border-bottom:5px solid #e4e4e4;"&gt;
+        &lt;tr valign="middle"&gt;
+          &lt;td height="85"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+            &lt;td&gt;&lt;!-- CHANGE COLOR STYLE BELOW: blue - #98bec6 ; tan - #b5b192 --&gt;
+                &lt;h2 style="color:#98bec6;margin:0;padding:0;font:bold 11pt Arial;text-transform:uppercase;"&gt;Delegation Revocation&lt;/h2&gt;
+                &lt;h1 style="color:#fff;margin:0;padding:0;font:bold 20pt Arial;"&gt;Delegation Revoked by $!{requesterName}&lt;/h1&gt;              
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;!-- /HEADER --&gt;
+        
+        &lt;!-- CONTENT --&gt;
+        &lt;table cellpadding="0" cellspacing="0" width="588" style="background:#fff;margin:0;padding:0;text-align:left;border-left:4px solid #ccc;border-right:4px solid #ccc;"&gt;
+        &lt;tr valign="top"&gt; 
+          &lt;td colspan="3"&gt;&lt;img src="http://www.sailpoint.com/mailers/task-alert/+___.gif" height="40" width="1" alt="" /&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr valign="top"&gt;
+          &lt;td width="40"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+          &lt;td&gt;
+            
+            &lt;table cellpadding="0" cellspacing="0" width="100%" border="0"&gt;
+            &lt;tr valign="bottom"&gt;
+            &lt;td&gt;
+            &lt;p style="margin:0;padding:0;color:#333;font:bold 10pt Arial;line-height:15pt;"&gt;&lt;/p&gt;
+            &lt;p/&gt;
+            &lt;p style="margin:0;padding:0;color:#333;font: 10pt Arial;line-height:15pt;"&gt;$!{requesterName} has revoked the following work item from you:&lt;/p&gt;
+            &lt;br/&gt;
+            &lt;p style="margin:0;padding:0;color:#333;font: bold 10pt Arial;line-height:15pt;"&gt;$!{workItemName}.&lt;/p&gt;
+            &lt;br/&gt;
+            &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;/table&gt;
+            &lt;!-- CHANGE STYLE COLOR IN anchor or a TAG BELOW and in all anchor tags that apply below : red - #a22831 ; blue - #0987a0 --&gt;
+            &lt;p style="margin:0;padding:0;color:#333;font:normal 10pt Arial;line-height:15pt;"&gt;Thank you for your cooperation&lt;/p&gt;
+            &lt;p style="margin:0 0 50px;padding:0;color:#333;font:bold 10pt Arial;line-height:15pt;"&gt;Your Security and Compliance Team&lt;/p&gt;
+            &lt;/td&gt;
+            &lt;td width="40"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr valign="top"&gt;
+          &lt;td colspan="3"&gt;
+            &lt;p style="margin:0 0 0 30px;padding:0;color:#b0adad;font:normal 8pt Arial;line-height:12pt;margin-bottom:30px"&gt;&lt;a href="#" style="color:#666666;text-decoration:none;font-weight:bold;"&gt;Help&lt;/a&gt; &amp;nbsp;|&amp;nbsp; &lt;a href="#" style="color:#666666;text-decoration:none;font-weight:bold;"&gt;FAQs&lt;/a&gt; &amp;nbsp;|&amp;nbsp; &lt;a href="#" style="color:#666666;text-decoration:none;font-weight:bold;"&gt;Support&lt;/a&gt;&lt;/p&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;!-- /CONTENT --&gt;
+        
+        &lt;!-- FOOTER --&gt;
+        &lt;!-- CHANGE BACKGROUND COLOR IN STYLE BELOW: blue - #0987a0 ; tan - #847f5c --&gt;
+        &lt;table cellpading="0" cellspacing="0" width="588" style="background:#0987a0;margin:0;padding:0;text-align:right;border-top:5px solid #e4e4e4;"&gt;
+        &lt;tr valign="middle"&gt;
+          &lt;td width="180" height="60"&gt;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;!-- /FOOTER --&gt;
+        
+        &lt;!-- /EMAILER --&gt;
+        &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;/table&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+    
+    </Body>
+  <Description>
+      Email Template for notifying work item owners that their delegation
+      work item has been revoked.
+      
+      Arguments
+      ---------
+      workItemName (String):        The name of the delegated WorkItem
+      certification (Certification):    The Certification object containing the delegated item
+    requesterName (String):       The display name of the Identity that requested the reassignment
+
+    </Description>
+  <Subject>Work Item Revoked: $!{workItemName}</Subject>
+</EmailTemplate>
