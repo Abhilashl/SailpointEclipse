@@ -54,7 +54,7 @@
             &lt;p style="margin:0;padding:0;color:#333;font:normal 10pt Arial;line-height:15pt;"&gt;A specific access certification is named &lt;b&gt;$!{workItemName}&lt;/b&gt; has been created for you, and is due on &lt;strong&gt;$spTools.formatDate( $certification.expiration,3,3)&lt;/strong&gt;.&lt;/p&gt;
             
             &lt;!-- CHANGE STYLE COLOR IN anchor or a TAG BELOW and in all anchor tags that apply below : red - #a22831 ; blue - #0987a0 --&gt;
-            &lt;p style="margin:20px 0;padding:0;color:#333;font:bold 10pt Arial;line-height:15pt;"&gt;&lt;a href="http://localhost:8080/identityiq/manage/certification/entityList.jsf?certificationId=$!{certification.id}"&gt;Click here to get started on this task.&lt;/a&gt;&lt;/p&gt;
+            &lt;p style="margin:20px 0;padding:0;color:#333;font:bold 10pt Arial;line-height:15pt;"&gt;&lt;a href="%%BASE_URL%%/manage/certification/entityList.jsf?certificationId=$!{certification.id}"&gt;Click here to get started on this task.&lt;/a&gt;&lt;/p&gt;
             &lt;p style="margin:0 0 20px;padding:0;color:#333;font:normal 10pt Arial;line-height:15pt;"&gt;Your timely completion of this access review is an important part of protecting our valuable corporate information. Your participation is greatly appreciated&lt;/p&gt;
             &lt;p style="margin:0;padding:0;color:#333;font:normal 10pt Arial;line-height:15pt;"&gt;Thank you for your cooperation,&lt;/p&gt;&lt;br /&gt;
             &lt;p style="margin:0 0 20px;padding:0;color:#333;font:bold 10pt Arial;line-height:15pt;"&gt;The Security and Compliance Organization&lt;/p&gt;
@@ -112,7 +112,7 @@ $tag.name&lt;/br&gt;
             &lt;!-- CHANGE BACKGROUND COLOR BELOW : red - #9f2d32 ; green - #668641 --&gt;
             &lt;!-- CHANGE BORDER COLOR BELOW : red - #b35b62 ; green - #78a347 --&gt;
             &lt;div style="background:#668641;border:3px solid #78a347;width:145px;height:33px;float:right;margin-bottom:30px;"&gt;
-              &lt;a href="http://localhost:8080/identityiq/manage/certification/certification.jsf?id=$!{certification.id}" 
+              &lt;a href="%%BASE_URL%%/manage/certification/certification.jsf?id=$!{certification.id}" 
                 style="color:#fff; text-align:center;font:normal 14pt Arial;display:block;margin-top:3px;text-decoration:none;"&gt;
                 &lt;!--&lt;img src="http://www.sailpoint.com/mailers/task-alert/btn-start-task.png" border="0" width="145" height="33" alt="Start Task" /&gt;--&gt;
                 Start Task
