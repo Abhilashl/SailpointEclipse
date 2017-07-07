@@ -11,21 +11,27 @@
   import java.util.*;
   import sailpoint.object.*;
 
+  String sendTo = "mbox-idm-prd@aciworldwide.com";
+  String template = "ACI - New Certification";
+  String identityName = "josh.duffney@aciworldwide.com";
+
   Logger log = Logger.getLogger("com.aci.account.rule.TestEmailTemplates");  
   
-  Identity identityObject = context.getObjectByName(Identity.class, "josh.duffney@aciworldwide.com");
+  Identity identityObject = context.getObjectByName(Identity.class, identityName);
   String displayName = identityObject.getDisplayName();
   
-  EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "ACI - New Certification");
+  EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, template );
   EmailOptions options = new EmailOptions();
   
   //set to address
-  emailTemplate.setTo("mbox-idm-prd@aciworldwide.com");
+  emailTemplate.setTo(sendTo);
   options.setSendImmediate(true);
   options.setVariable("identityDisplayName", displayName);
   options.setVariable("identityObject", identityObject);
   options.setVariable("workItemName", "Manager Access Review");
   context.sendEmailNotification(emailTemplate, options);
-    
+  
+  return "EmailTemplate: " + template + "   SendTo: " + sendTo + "   identityName: " + identityName ;
+      
 ]]></Source>
 </Rule>
