@@ -11,9 +11,7 @@
       &lt;td height="20"&gt;&amp;nbsp;&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr valign="top"&gt;
-      &lt;!-- CHANGE IMAGE SRC TO CLIENT LOGO --&gt;
-      &lt;td align="right" width="295" height="79"&gt;&amp;nbsp;&lt;/td&gt;
-        &lt;!-- /CLIENT LOGO --&gt;
+    &lt;td&gt;&lt;img src="%%BASE_URL%%/images/aci/ACI-horiz_black.png" align="middle" width="300" height="50" alt="" /&gt;&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr valign="top"&gt;
         &lt;td height="7"&gt;&amp;nbsp;&lt;/td&gt;
@@ -23,8 +21,8 @@
         &lt;!-- EMAILER CONTENT BEGINS --&gt;
         
         &lt;!-- HEADER --&gt;
-        &lt;!-- CHANGE BACKGROUND COLOR IN STYLE BELOW: blue - #0987a0 ; tan - #847f5c --&gt;
-        &lt;table cellpadding="0" cellspacing="0" width="588" style="background:#0987a0;margin:0;padding:0;text-align:left;border-bottom:5px solid #e4e4e4;"&gt;
+        &lt;!-- CHANGE BACKGROUND COLOR IN STYLE BELOW: ACI Primary - %%PRI_COLOR%% ; tan - #847f5c --&gt;
+        &lt;table cellpadding="0" cellspacing="0" width="588" style="background:%%PRI_COLOR%%;margin:0;padding:0;text-align:left;border-bottom:5px solid #e4e4e4;"&gt;
         &lt;tr valign="middle"&gt;
           &lt;td width="30" height="85"&gt;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
             &lt;td&gt;&lt;!-- CHANGE COLOR STYLE BELOW: blue - #98bec6 ; tan - #b5b192 --&gt;
@@ -69,8 +67,8 @@
             
               &lt;table cellpadding="0" cellspacing="0" width="192" border="0" style="margin-bottom:30px"&gt;
                 &lt;tr valign="top"&gt;
-                &lt;td style="background:#668641;border-bottom:2px solid #fff;"&gt;
-                  &lt;!-- CHANGE HEADER BACKGROUND COLOR ABOVE : green - #668641 ; red - #a22831 --&gt;
+                &lt;td style="background:%%SEC_COLOR%%;border-bottom:2px solid #fff;"&gt;
+                  &lt;!-- CHANGE HEADER BACKGROUND COLOR ABOVE : ACI Secondary - %%SEC_COLOR%% ; red - #a22831 --&gt;
                   &lt;p style="color:#fff;font:bold 11pt Arial;margin:10px 0 10px 15px;line-height:13pt;"&gt;Details&lt;/p&gt;
                 &lt;/td&gt;
                 &lt;/tr&gt;
@@ -134,8 +132,8 @@ $tag.name&lt;/br&gt;
         &lt;!-- /CONTENT --&gt;
         
         &lt;!-- FOOTER --&gt;
-        &lt;!-- CHANGE BACKGROUND COLOR IN STYLE BELOW: blue - #0987a0 ; tan - #847f5c --&gt;
-        &lt;table cellpading="0" cellspacing="0" width="588" style="background:#0987a0;margin:0;padding:0;text-align:right;border-top:5px solid #e4e4e4;"&gt;
+        &lt;!-- CHANGE BACKGROUND COLOR IN STYLE BELOW: ACI Primary - %%PRI_COLOR%% ; tan - #847f5c --&gt;
+        &lt;table cellpading="0" cellspacing="0" width="588" style="background:%%PRI_COLOR%%;margin:0;padding:0;text-align:right;border-top:5px solid #e4e4e4;"&gt;
         &lt;tr valign="middle"&gt;
           &lt;td height="60"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
         &lt;/tr&gt;
