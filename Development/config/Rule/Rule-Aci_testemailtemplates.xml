@@ -4,7 +4,7 @@
   <Description>This rule is used for testing email templates</Description>
   <Signature returnType="String"/>
   <Source><![CDATA[
-import org.apache.log4j.Logger;
+  import org.apache.log4j.Logger;
   import sailpoint.object.*;
   import java.util.List;
   import java.io.*;
@@ -13,10 +13,10 @@ import org.apache.log4j.Logger;
 
   Logger log = Logger.getLogger("com.aci.account.rule.TestEmailTemplates");  
   
-  Identity identityObject = context.getObjectByName(Identity.class, "dorian.yates@aciworldwide.com");
+  Identity identityObject = context.getObjectByName(Identity.class, "josh.duffney@aciworldwide.com");
   String displayName = identityObject.getDisplayName();
   
-  EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "New Certification - HTML");
+  EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "ACI - New Certification");
   EmailOptions options = new EmailOptions();
   
   //set to address
