@@ -2,8 +2,13 @@
 <!DOCTYPE DynamicScope PUBLIC "sailpoint.dtd" "sailpoint.dtd">
 <DynamicScope name="ACI Immediate Termination">
   <Description>Disable all accounts immediately</Description>
+  <Inclusions>
+    <Reference class="sailpoint.object.Identity" name="jatin.goswami@aciworldwide.com"/>
+    <Reference class="sailpoint.object.Identity" name="jon.coover@aciworldwide.com"/>
+    <Reference class="sailpoint.object.Identity" name="tim.nichols@aciworldwide.com"/>
+  </Inclusions>
   <PopulationRequestAuthority>
-    <MatchConfig customControl="(identityType == &quot;Personal&quot;) &amp;&amp; ( personType == &quot;Employee&quot; || personType == &quot;Contingent Worker&quot;)" enableCustomControl="true"/>
+    <MatchConfig customControl="(identityType == &quot;Personal&quot;) &amp;&amp; ( inactive != true)" enableCustomControl="true"/>
   </PopulationRequestAuthority>
   <Selector>
     <IdentitySelector>
