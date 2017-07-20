@@ -71,16 +71,26 @@
 */
 
 import sailpoint.tools.Util;
-import org.apache.log4j.Logger; 
+import org.apache.log4j.Logger;
+import sailpoint.api.IdentityService;
+import sailpoint.object.*;
+
+//logger.debug( "project=" +  project.toXml() );
+//logger.debug( "sourceAttributeRequest=" +  sourceAttributeRequest.toXml() );
 
 Logger logger = Logger.getLogger("com.aci.rule.aci_setFullName");
 
 String firstName = identity.getFirstname();
 String lastName = identity.getLastname() ;
-
 String name = firstName + " " + lastName;
 
-logger.debug("target.getApplication()" + target.getApplication());
+IdentityService identitySvc = new IdentityService(context);
+
+    //getLink(Identity identity, Application application, java.lang.String instance, java.lang.String nativeIdentity)  
+    //getLink(target, target.GetApplication().getId(), "", java.lang.String nativeIdentity)
+    //Retrieves the link from the identity with the given application, instance and native identity.
+
+logger.debug("target.getApplication()=" + target.getApplication().id);
 logger.debug("target.getApplication().getName=" + target.getApplication().getName());
 logger.debug("getKey()=" + target.getKey());
 
@@ -89,6 +99,20 @@ if ( identity.isCorrelated() ) {
     // Authoritative App
     return name;
 } else {
-    return null;
-}]]></Source>
+
+    List<Link> applinkLists = identitySvc.getLinks(identity , target.getApplication() );
+    
+    //logger.debug("applinkLists.toXml()=" + applinkLists.toXml() );
+    
+    if ( null != applinkLists) {
+       for ( Link applink : applinkLists ) {
+           String acctName = applink.getAttribute("NAME");
+           logger.debug("NAME=" + acctName);
+       }
+
+    return acctName;
+    }
+
+}
+]]></Source>
 </Rule>
