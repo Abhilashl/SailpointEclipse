@@ -80,7 +80,7 @@ import sailpoint.object.*;
 import org.apache.log4j.Logger; 
 import sailpoint.tools.Util;
 
-Logger logger = Logger.getLogger("com.aci.rule.aci_setManager");
+Logger logger = Logger.getLogger("com.aci.rule.aci_setManager");
 logger.debug("aci_setManager");
 
 String appName = target.getApplication().getName();
